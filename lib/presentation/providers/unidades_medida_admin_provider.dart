@@ -13,11 +13,9 @@ class UnidadesMedidaAdminNotifier extends AsyncNotifier<List<UnidadMedida>> {
         return await repository.getUnidadesMedida();
     }
 
-  // Agregamos los métodos de mutación que faltaban para el panel de admin
     Future<void> addUnidadMedida(UnidadMedida unidad) async {
         state = const AsyncValue.loading();
         state = await AsyncValue.guard(() async {
-        // Asumiendo que agregas createUnidadMedida en tu repository
         // await ref.read(unidadMedidaRepositoryProvider).createUnidadMedida(unidad);
         return _fetchUnidades();
         });
