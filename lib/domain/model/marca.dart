@@ -1,27 +1,27 @@
-class Categoria {
+class Marca {
     final String id;
     final String nombre;
     final String? descripcion;
     final bool activo;
 
-Categoria({
+Marca({
     required this.id,
     required this.nombre,
     this.descripcion,
     this.activo = true,
 });
 
-Categoria copyWith({
+Marca copyWith({
     String? id,
     String? nombre,
     String? descripcion,
     bool? activo,
 }) {
-    return Categoria(
-      id: id ?? this.id,
-      nombre: nombre ?? this.nombre,
-      descripcion: descripcion ?? this.descripcion,
-      activo: activo ?? this.activo,
-    );
-  }
+        return Marca(
+        id: id ?? this.id,
+        nombre: nombre ?? this.nombre,
+        descripcion: descripcion ?? this.descripcion,
+        activo: activo ?? this.activo,
+        );
+    }
 }
