@@ -1,172 +1,64 @@
-// lib/data/remote/api/product_remote_datasource.dart
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/error/api_exception.dart';
 import 'dio_client.dart';
 import '../../../domain/model/product.dart';
 
-class PaginatedProducts {
-  final int count;
-  final String? next;
-  final String? previous;
-  final List<Product> results;
+class ProductoRemoteDataSource {
+  final Dio dio;
 
-  const PaginatedProducts({
-    required this.count,
-    this.next,
-    this.previous,
-    required this.results,
-  });
+  ProductoRemoteDataSource(this.dio);
 
-  factory PaginatedProducts.fromJson(Map<String, dynamic> json) {
-    return PaginatedProducts(
-      count: json['count'] as int,
-      next: json['next'] as String?,
-      previous: json['previous'] as String?,
-      results: (json['results'] as List<dynamic>)
-          .map((p) => Product.fromJson(p as Map<String, dynamic>))
-          .toList(),
-    );
-  }
-}
-
-abstract class ProductRemoteDatasource {
-  Future<PaginatedProducts> getProducts({
-    String?  search,
-    int?     category,
-    double?  priceMin,
-    double?  priceMax,
-    int?     stockMin,
-    bool?    isActive,
-    String?  ordering,
-    int      page,
-    int      pageSize,
-  });
-  Future<Product>             getProduct(int id);
-  Future<Product>             createProduct(Map<String, dynamic> payload);
-  Future<Product>             updateProduct(int id, Map<String, dynamic> payload);
-  Future<void>                deleteProduct(int id);
-  Future<Map<String, dynamic>> restock(int id, int quantity);
-  Future<Map<String, dynamic>> getStats();
-  
-  // NUEVO: Método dedicado única y exclusivamente a subir la imagen sin alterar el JSON anterior
-  Future<Product>             uploadProductImage(int id, String imagePath);
-}
-
-class ProductRemoteDatasourceImpl implements ProductRemoteDatasource {
-  final Dio _dio;
-  ProductRemoteDatasourceImpl(this._dio);
-
-  @override
-  Future<PaginatedProducts> getProducts({
-    String?  search,
-    int?     category,
-    double?  priceMin,
-    double?  priceMax,
-    int?     stockMin,
-    bool?    isActive,
-    String?  ordering,
-    int      page     = 1,
-    int      pageSize = 12,
-  }) async {
+  Future<List<Producto>> getProductos({String? categoriaId, String? marcaId}) async {
     try {
-      final params = <String, dynamic>{
-        'page':      page,
-        'page_size': pageSize,
-        if (search   != null) 'search':    search,
-        if (category != null) 'category':  category,
-        if (priceMin != null) 'price_min': priceMin,
-        if (priceMax != null) 'price_max': priceMax,
-        if (stockMin != null) 'stock_min': stockMin,
-        if (isActive != null) 'is_active': isActive,
-        if (ordering != null) 'ordering':  ordering,
-      };
-      final res = await _dio.get('/products/', queryParameters: params);
-      return PaginatedProducts.fromJson(res.data as Map<String, dynamic>);
+      final queryParams = <String, dynamic>{};
+      if (categoriaId != null) queryParams['categoria'] = categoriaId;
+      if (marcaId != null) queryParams['marca'] = marcaId;
+
+      final response = await dio.get('/api/productos/', queryParameters: queryParams);
+      return (response.data as List).map((json) => Producto.fromJson(json)).toList();
     } on DioException catch (e) {
-      throw ApiException.fromDioError(e);
+      throw ApiException('Error al obtener productos: ${e.message}');
     }
   }
 
-  @override
-  Future<Product> getProduct(int id) async {
+  Future<Producto> getProductoById(String id) async {
     try {
-      final res = await _dio.get('/products/$id/');
-      return Product.fromJson(res.data as Map<String, dynamic>);
+      final response = await dio.get('/api/productos/$id/');
+      return Producto.fromJson(response.data);
     } on DioException catch (e) {
-      throw ApiException.fromDioError(e);
+      throw ApiException('Error al obtener producto: ${e.message}');
     }
   }
 
-  @override
-  Future<Product> createProduct(Map<String, dynamic> payload) async {
+  Future<Producto> createProducto(Producto producto) async {
     try {
-      // Regresamos a JSON puro para asegurar estabilidad con los campos del formulario
-      final res = await _dio.post('/products/', data: payload);
-      return Product.fromJson(res.data as Map<String, dynamic>);
+      final response = await dio.post('/api/productos/', data: producto.toJson());
+      return Producto.fromJson(response.data);
     } on DioException catch (e) {
-      throw ApiException.fromDioError(e);
+      throw ApiException('Error al crear producto: ${e.message}');
     }
   }
 
-  @override
-  Future<Product> updateProduct(int id, Map<String, dynamic> payload) async {
+  Future<Producto> updateProducto(Producto producto) async {
     try {
-      // Regresamos a JSON puro
-      final res = await _dio.patch('/products/$id/', data: payload);
-      return Product.fromJson(res.data as Map<String, dynamic>);
+      final response = await dio.put('/api/productos/${producto.id}/', data: producto.toJson());
+      return Producto.fromJson(response.data);
     } on DioException catch (e) {
-      throw ApiException.fromDioError(e);
+      throw ApiException('Error al actualizar producto: ${e.message}');
     }
   }
 
-  @override
-  Future<Product> uploadProductImage(int id, String imagePath) async {
+  Future<void> deleteProducto(String id) async {
     try {
-      // Creamos el FormData exclusivo para la imagen
-      final formData = FormData.fromMap({
-        'image_url': await MultipartFile.fromFile(imagePath), 
-        // Nota: Si tu backend espera la clave 'image' o 'file' en vez de 'image_url', cámbiala aquí arriba.
-      });
-
-      final res = await _dio.patch('/products/$id/', data: formData);
-      return Product.fromJson(res.data as Map<String, dynamic>);
+      await dio.delete('/api/productos/$id/');
     } on DioException catch (e) {
-      throw ApiException.fromDioError(e);
-    }
-  }
-
-  @override
-  Future<void> deleteProduct(int id) async {
-    try {
-      await _dio.delete('/products/$id/');
-    } on DioException catch (e) {
-      throw ApiException.fromDioError(e);
-    }
-  }
-
-  @override
-  Future<Map<String, dynamic>> restock(int id, int quantity) async {
-    try {
-      final res = await _dio.post('/products/$id/restock/', data: {'quantity': quantity});
-      return res.data as Map<String, dynamic>;
-    } on DioException catch (e) {
-      throw ApiException.fromDioError(e);
-    }
-  }
-
-  @override
-  Future<Map<String, dynamic>> getStats() async {
-    try {
-      final res = await _dio.get('/products/stats/');
-      return res.data as Map<String, dynamic>;
-    } on DioException catch (e) {
-      throw ApiException.fromDioError(e);
+      throw ApiException('Error al eliminar producto: ${e.message}');
     }
   }
 }
 
-final productDatasourceProvider = Provider<ProductRemoteDatasource>((ref) {
-  return ProductRemoteDatasourceImpl(ref.watch(dioProvider));
+final productoRemoteDataSourceProvider = Provider<ProductoRemoteDataSource>((ref) {
+  final dio = ref.watch(dioProvider);
+  return ProductoRemoteDataSource(dio);
 });
