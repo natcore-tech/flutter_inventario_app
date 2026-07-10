@@ -21,3 +21,11 @@ UnidadMedida copyWith({
         );
     }
 }
+
+factory UnidadMedida.fromJson(Map<String, dynamic> json) {
+    return UnidadMedida(
+        id: json['id'] ?? json['_id'] ?? '',
+        nombre: json['nombre'] ?? '',
+        abreviatura: json['abreviatura'] ?? '',
+    );
+}

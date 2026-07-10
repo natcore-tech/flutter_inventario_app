@@ -49,3 +49,32 @@ Producto copyWith({
     );
   }
 }
+
+factory Producto.fromJson(Map<String, dynamic> json) {
+    return Producto(
+      id: json['id'] ?? json['_id'] ?? '',
+      sku: json['sku'] ?? '',
+      nombre: json['nombre'] ?? '',
+      descripcion: json['descripcion'],
+      precio: (json['precio'] ?? 0).toDouble(),
+      marcaId: json['marcaId'] ?? '',
+      categoriaId: json['categoriaId'] ?? '',
+      unidadMedidaId: json['unidadMedidaId'] ?? '',
+      imageUrl: json['imageUrl'],
+      activo: json['activo'] ?? true,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'sku': sku,
+      'nombre': nombre,
+      'descripcion': descripcion,
+      'precio': precio,
+      'marcaId': marcaId,
+      'categoriaId': categoriaId,
+      'unidadMedidaId': unidadMedidaId,
+      'imageUrl': imageUrl,
+      'activo': activo,
+    };
+  }

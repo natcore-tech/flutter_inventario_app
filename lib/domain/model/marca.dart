@@ -18,10 +18,27 @@ Marca copyWith({
     bool? activo,
 }) {
         return Marca(
-        id: id ?? this.id,
-        nombre: nombre ?? this.nombre,
-        descripcion: descripcion ?? this.descripcion,
-        activo: activo ?? this.activo,
+            id: id ?? this.id,
+            nombre: nombre ?? this.nombre,
+            descripcion: descripcion ?? this.descripcion,
+            activo: activo ?? this.activo,
         );
     }
+}
+
+factory Marca.fromJson(Map<String, dynamic> json) {
+    return Marca(
+        id: json['id'] ?? json['_id'] ?? '',
+        nombre: json['nombre'] ?? '',
+        descripcion: json['descripcion'],
+        activo: json['activo'] ?? true,
+    );
+}
+
+Map<String, dynamic> toJson() {
+    return {
+        'nombre': nombre,
+        'descripcion': descripcion,
+        'activo': activo,
+    };
 }

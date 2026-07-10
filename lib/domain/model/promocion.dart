@@ -33,3 +33,24 @@ Promocion copyWith({
     );
 }
 }
+
+factory Promocion.fromJson(Map<String, dynamic> json) {
+    return Promocion(
+        id: json['id'] ?? json['_id'] ?? '',
+        productoId: json['productoId'] ?? '',
+        porcentajeDescuento: (json['porcentajeDescuento'] ?? 0).toDouble(),
+        fechaInicio: DateTime.parse(json['fechaInicio']),
+        fechaFin: DateTime.parse(json['fechaFin']),
+        activa: json['activa'] ?? true,
+    );
+}
+
+Map<String, dynamic> toJson() {
+    return {
+        'productoId': productoId,
+        'porcentajeDescuento': porcentajeDescuento,
+        'fechaInicio': fechaInicio.toIso8601String(),
+        'fechaFin': fechaFin.toIso8601String(),
+        'activa': activa,
+    };
+}
