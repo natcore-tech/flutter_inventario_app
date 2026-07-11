@@ -13,15 +13,17 @@ class AdminNavItem {
   const AdminNavItem({required this.label, required this.icon, required this.route});
 }
 
+// ⚠️ TEMPORAL: solo quedan los módulos que existen en esta rama
+// (Clientes y Turno de Caja son tuyos; Usuarios es de Auth/genérico).
+// Se restauran Dashboard/Categorías/Productos/Pedidos al integrar
+// con el resto del equipo.
 const adminNavItems = [
-  AdminNavItem(label: 'Dashboard',  icon: Icons.dashboard_outlined,       route: '/admin'),
-  AdminNavItem(label: 'Categorías', icon: Icons.category_outlined,        route: '/admin/categories'),
-  AdminNavItem(label: 'Productos',  icon: Icons.inventory_2_outlined,     route: '/admin/products'),
-  AdminNavItem(label: 'Pedidos',    icon: Icons.shopping_bag_outlined,    route: '/admin/orders'),
-  AdminNavItem(label: 'Usuarios',   icon: Icons.people_outline,           route: '/admin/users'),
+  AdminNavItem(label: 'Clientes',      icon: Icons.people_alt_outlined,   route: '/admin'),
+  AdminNavItem(label: 'Turno de Caja', icon: Icons.point_of_sale_rounded, route: '/admin/turno-caja'),
+  AdminNavItem(label: 'Usuarios',      icon: Icons.people_outline,        route: '/admin/users'),
 ];
 
-/// Evita que `/admin/orders` resalte "Dashboard" (`/admin` es prefijo de todas las rutas admin).
+/// Evita que `/admin/turno-caja` resalte "Clientes" (`/admin` es prefijo de todas las rutas admin).
 int adminSelectedIndex(String currentRoute) {
   if (currentRoute == '/admin') return 0;
   final idx = adminNavItems.indexWhere(
@@ -50,13 +52,8 @@ class AdminShell extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        actions: [
-          TextButton(
-            onPressed: () => context.go('/'),
-            child: const Text('← Tienda',
-                style: TextStyle(color: AppColors.accent, fontSize: 13)),
-          ),
-        ],
+        // ⚠️ TEMPORAL: se quitó el botón "← Tienda" porque la zona
+        // pública ('/') todavía no existe en esta rama.
       ),
       drawer: NavigationDrawer(
         selectedIndex: adminSelectedIndex(currentRoute),
