@@ -65,8 +65,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
               // Logo
               Text(
-                'Flutter Shop App',
-                style: tt.displayMedium?.copyWith(color: AppColors.accent),
+                'StockMaster',
+                textAlign: TextAlign.center,
+                style: tt.displayMedium?.copyWith(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Text('Inicia sesión en tu cuenta', style: tt.bodyMedium),
