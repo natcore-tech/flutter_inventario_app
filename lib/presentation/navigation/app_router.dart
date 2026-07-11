@@ -7,6 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/clientes_admin_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/productos_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/turno_caja_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/venta_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/metodo_pago_admin_screen.dart';
@@ -78,6 +79,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           title: 'Clientes',
           currentRoute: s.matchedLocation,
           child: const ClientesAdminScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/admin/productos',
+        builder: (_, s) => AdminShell(
+          title: 'Productos',
+          currentRoute: s.matchedLocation,
+          child: const ProductosAdminScreen(),
         ),
       ),
       GoRoute(

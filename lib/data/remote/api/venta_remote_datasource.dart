@@ -22,9 +22,7 @@ class VentaRemoteDatasource {
     throw Exception('Error al cargar ventas: ${response.statusCode}');
   }
 
-  /// Crea la venta completa: cliente + carrito de productos + pagos.
-  /// El backend calcula precios (con promociones), IVA, total, descuenta
-  /// stock, y valida que exista un turno de caja abierto.
+
   Future<Venta> crearVenta({
     required int clienteId,
     required List<VentaDetalle> detalles,

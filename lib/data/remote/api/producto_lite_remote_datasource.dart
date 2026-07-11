@@ -26,6 +26,11 @@ class ProductoLiteRemoteDatasource {
     }
     throw Exception('Error al cargar productos: ${response.statusCode}');
   }
+
+  Future<ProductoLite> createProducto(Map<String, dynamic> payload) async {
+    final response = await _dio.post(_basePath, data: payload);
+    return ProductoLite.fromJson(response.data);
+  }
 }
 
 final productoLiteDatasourceProvider =

@@ -21,6 +21,7 @@ const adminNavItems = [
   AdminNavItem(label: 'Turno de Caja',  icon: Icons.point_of_sale_rounded, route: '/admin/turno-caja'),
   AdminNavItem(label: 'Registrar Venta',icon: Icons.shopping_cart_checkout_rounded, route: '/admin/venta'),
   AdminNavItem(label: 'Métodos de Pago',icon: Icons.payments_outlined,     route: '/admin/metodos-pago'),
+  AdminNavItem(label: 'Productos',      icon: Icons.inventory_2_outlined,  route: '/admin/productos'),
   AdminNavItem(label: 'Usuarios',       icon: Icons.people_outline,        route: '/admin/users'),
 ];
 
