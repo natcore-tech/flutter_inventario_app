@@ -18,11 +18,12 @@ class FlutterInventarioApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    
     return MaterialApp.router(
-      title:                'Flutter Inventario App',
+      title: 'StockMaster Pro', // Actualizado al nombre de tu app
       debugShowCheckedModeBanner: false,
-      theme:                AppTheme.dark,
-      routerConfig:         router,
+      theme: AppTheme.darkTheme, // Ajustado para coincidir con app_theme.dart
+      routerConfig: router,
     );
   }
 }

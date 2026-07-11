@@ -1,33 +1,33 @@
-class Categoria {
+class Marca {
     final String id;
     final String nombre;
     final String? descripcion;
     final bool activo;
 
-Categoria({
+Marca({
     required this.id,
     required this.nombre,
     this.descripcion,
     this.activo = true,
 });
 
-Categoria copyWith({
+Marca copyWith({
     String? id,
     String? nombre,
     String? descripcion,
     bool? activo,
 }) {
-        return Categoria(
+        return Marca(
             id: id ?? this.id,
             nombre: nombre ?? this.nombre,
             descripcion: descripcion ?? this.descripcion,
             activo: activo ?? this.activo,
-            );
-        }
+        );
+    }
 }
 
-factory Categoria.fromJson(Map<String, dynamic> json) {
-    return Categoria(
+factory Marca.fromJson(Map<String, dynamic> json) {
+    return Marca(
         id: json['id'] ?? json['_id'] ?? '',
         nombre: json['nombre'] ?? '',
         descripcion: json['descripcion'],

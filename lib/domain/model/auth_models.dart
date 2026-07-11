@@ -25,4 +25,4 @@ class LoggedUser {
     email:    map['email']    as String,
     isStaff:  map['is_staff'] as bool,
   );
-}
+} 

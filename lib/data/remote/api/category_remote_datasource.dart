@@ -1,87 +1,63 @@
-// lib/data/remote/api/category_remote_datasource.dart
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/error/api_exception.dart';
 import 'dio_client.dart';
 import '../../../domain/model/category.dart';
 
-abstract class CategoryRemoteDatasource {
-  Future<List<Category>> getCategories();
-  Future<Category>       getCategory(int id);
-  Future<Category>       createCategory(Map<String, dynamic> payload);
-  Future<Category>       updateCategory(int id, Map<String, dynamic> payload);
-  Future<void>           deleteCategory(int id);
-  Future<Map<String, dynamic>> getStats();
-}
+class CategoriaRemoteDataSource {
+  final Dio dio;
 
-class CategoryRemoteDatasourceImpl implements CategoryRemoteDatasource {
-  final Dio _dio;
-  CategoryRemoteDatasourceImpl(this._dio);
+  CategoriaRemoteDataSource(this.dio);
 
-  @override
-  Future<List<Category>> getCategories() async {
+  Future<List<Categoria>> getCategorias() async {
     try {
-      final res = await _dio.get('/categories/');
-      final data = res.data as Map<String, dynamic>;
-      return (data['results'] as List)
-          .map((e) => Category.fromJson(e as Map<String, dynamic>))
-          .toList();
+      final response = await dio.get('/api/categorias/');
+      return (response.data as List).map((json) => Categoria.fromJson(json)).toList();
     } on DioException catch (e) {
-      throw ApiException.fromDioError(e);
+      throw ApiException('Error al obtener categorías: ${e.message}');
+    } catch (e) {
+      throw ApiException('Error inesperado: $e');
     }
   }
 
-  @override
-  Future<Category> getCategory(int id) async {
+  Future<Categoria> getCategoriaById(String id) async {
     try {
-      final res = await _dio.get('/categories/$id/');
-      return Category.fromJson(res.data as Map<String, dynamic>);
+      final response = await dio.get('/api/categorias/$id/');
+      return Categoria.fromJson(response.data);
     } on DioException catch (e) {
-      throw ApiException.fromDioError(e);
+      throw ApiException('Error al obtener la categoría: ${e.message}');
     }
   }
 
-  @override
-  Future<Category> createCategory(Map<String, dynamic> payload) async {
+  Future<Categoria> createCategoria(Categoria categoria) async {
     try {
-      final res = await _dio.post('/categories/', data: payload);
-      return Category.fromJson(res.data as Map<String, dynamic>);
+      final response = await dio.post('/api/categorias/', data: categoria.toJson());
+      return Categoria.fromJson(response.data);
     } on DioException catch (e) {
-      throw ApiException.fromDioError(e);
+      throw ApiException('Error al crear categoría: ${e.message}');
     }
   }
 
-  @override
-  Future<Category> updateCategory(int id, Map<String, dynamic> payload) async {
+  Future<Categoria> updateCategoria(Categoria categoria) async {
     try {
-      final res = await _dio.patch('/categories/$id/', data: payload);
-      return Category.fromJson(res.data as Map<String, dynamic>);
+      final response = await dio.put('/api/categorias/${categoria.id}/', data: categoria.toJson());
+      return Categoria.fromJson(response.data);
     } on DioException catch (e) {
-      throw ApiException.fromDioError(e);
+      throw ApiException('Error al actualizar categoría: ${e.message}');
     }
   }
 
-  @override
-  Future<void> deleteCategory(int id) async {
+  Future<void> deleteCategoria(String id) async {
     try {
-      await _dio.delete('/categories/$id/');
+      await dio.delete('/api/categorias/$id/');
     } on DioException catch (e) {
-      throw ApiException.fromDioError(e);
-    }
-  }
-
-  @override
-  Future<Map<String, dynamic>> getStats() async {
-    try {
-      final res = await _dio.get('/categories/stats/');
-      return res.data as Map<String, dynamic>;
-    } on DioException catch (e) {
-      throw ApiException.fromDioError(e);
+      throw ApiException('Error al eliminar categoría: ${e.message}');
     }
   }
 }
 
-final categoryDatasourceProvider = Provider<CategoryRemoteDatasource>((ref) {
-  return CategoryRemoteDatasourceImpl(ref.watch(dioProvider));
+// Inyección de dependencias con Riverpod
+final categoryRemoteDataSourceProvider = Provider<CategoriaRemoteDataSource>((ref) {
+  final dio = ref.watch(dioProvider);
+  return CategoriaRemoteDataSource(dio);
 });

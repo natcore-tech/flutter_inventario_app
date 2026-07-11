@@ -3,28 +3,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../domain/model/auth_state.dart';
 import '../providers/auth_provider.dart';
+
+// ── Importaciones Auth ──
 import '../screens/auth/forgot_password_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/profile_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/auth/reset_password_confirm_screen.dart';
-import '../screens/admin/send_notification_screen.dart';
+
+// ── Importaciones Públicas (Shell Público) ──
 import '../screens/catalog/catalog_screen.dart';
 import '../screens/catalog/home_screen.dart';
 import '../screens/catalog/product_detail_screen.dart';
 import '../screens/cart/cart_screen.dart';
 import '../screens/orders/order_detail_screen.dart';
 import '../screens/orders/orders_screen.dart';
+import 'public_shell.dart';
+
+// ── Importaciones Admin (Shell Admin) ──
 import '../screens/admin/dashboard_screen.dart';
 import '../screens/admin/categories_admin_screen.dart';
+import '../screens/admin/products_admin_screen.dart';
+import '../screens/admin/marcas_admin_screen.dart'; // NUEVO
+import '../screens/admin/unidades_medida_admin_screen.dart'; // NUEVO
+import '../screens/admin/promociones_admin_screen.dart'; // NUEVO
 import '../screens/admin/order_admin_detail_screen.dart';
 import '../screens/admin/orders_admin_screen.dart';
-import '../screens/admin/products_admin_screen.dart';
 import '../screens/admin/users_admin_screen.dart';
+import '../screens/admin/send_notification_screen.dart';
 import '../widgets/admin_shell.dart';
-import 'public_shell.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -58,7 +68,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       // ── Staff ─────────────────────────────────────────────
       GoRoute(path: '/send-notification', builder: (_, __) => const SendNotificationScreen()),
 
-      // ── Zona pública con BottomNavBar ──────────────────────
+      // ── Zona pública con BottomNavBar (PublicShell) ───────
       ShellRoute(
         builder: (_, __, child) => PublicShell(child: child),
         routes: [
@@ -70,7 +80,8 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: ':id',
                 builder: (_, s) => ProductDetailScreen(
-                  productId: int.parse(s.pathParameters['id']!),
+                  // Ajustado a String para coincidir con nuestro modelo Producto
+                  productId: s.pathParameters['id']!,
                 ),
               ),
             ],
@@ -87,7 +98,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
 
-      // ── Admin ─────────────────────────────────────────────
+      // ── Admin (AdminShell) ────────────────────────────────
       GoRoute(
         path:    '/admin',
         builder: (_, s) => AdminShell(
@@ -96,6 +107,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           child:        const DashboardScreen(),
         ),
       ),
+      
+      // ── TAREA 1: CATÁLOGO Y ALMACENAMIENTO (MICKY) ────────
       GoRoute(
         path:    '/admin/categories',
         builder: (_, s) => AdminShell(
@@ -112,6 +125,33 @@ final routerProvider = Provider<GoRouter>((ref) {
           child:        const ProductsAdminScreen(),
         ),
       ),
+      GoRoute(
+        path:    '/admin/marcas',
+        builder: (_, s) => AdminShell(
+          title:        'Marcas',
+          currentRoute: s.matchedLocation,
+          child:        const MarcasAdminScreen(),
+        ),
+      ),
+      GoRoute(
+        path:    '/admin/unidades-medida',
+        builder: (_, s) => AdminShell(
+          title:        'Unidades de Medida',
+          currentRoute: s.matchedLocation,
+          child:        const UnidadesMedidaAdminScreen(),
+        ),
+      ),
+      GoRoute(
+        path:    '/admin/promociones',
+        builder: (_, s) => AdminShell(
+          title:        'Promociones',
+          currentRoute: s.matchedLocation,
+          child:        const PromocionesAdminScreen(),
+        ),
+      ),
+      // ──────────────────────────────────────────────────────
+
+      // ── TAREAS DE MICHAEL Y ELIHÚ ─────────────────────────
       GoRoute(
         path:    '/admin/orders',
         builder: (_, s) => AdminShell(

@@ -1,35 +1,30 @@
-// lib/data/repository/category_repository_impl.dart
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/model/category.dart';
-import '../../domain/repository/category_repository.dart';
+import '../../domain/repository/categoria_repository.dart';
 import '../remote/api/category_remote_datasource.dart';
 
-class CategoryRepositoryImpl implements CategoryRepository {
-  final CategoryRemoteDatasource _datasource;
-  CategoryRepositoryImpl(this._datasource);
+class CategoriaRepositoryImpl implements CategoriaRepository {
+  final CategoriaRemoteDataSource remoteDataSource;
+
+  CategoriaRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<List<Category>> getCategories() => _datasource.getCategories();
+  Future<List<Categoria>> getCategorias() => remoteDataSource.getCategorias();
 
   @override
-  Future<Category> getCategory(int id) => _datasource.getCategory(id);
+  Future<Categoria?> getCategoriaById(String id) => remoteDataSource.getCategoriaById(id);
 
   @override
-  Future<Category> createCategory(Map<String, dynamic> payload) =>
-      _datasource.createCategory(payload);
+  Future<Categoria> createCategoria(Categoria categoria) => remoteDataSource.createCategoria(categoria);
 
   @override
-  Future<Category> updateCategory(int id, Map<String, dynamic> payload) =>
-      _datasource.updateCategory(id, payload);
+  Future<Categoria> updateCategoria(Categoria categoria) => remoteDataSource.updateCategoria(categoria);
 
   @override
-  Future<void> deleteCategory(int id) => _datasource.deleteCategory(id);
-
-  @override
-  Future<Map<String, dynamic>> getStats() => _datasource.getStats();
+  Future<void> deleteCategoria(String id) => remoteDataSource.deleteCategoria(id);
 }
 
-final categoryRepositoryProvider = Provider<CategoryRepository>((ref) {
-  return CategoryRepositoryImpl(ref.watch(categoryDatasourceProvider));
+final categoryRepositoryProvider = Provider<CategoriaRepository>((ref) {
+  final dataSource = ref.watch(categoryRemoteDataSourceProvider);
+  return CategoriaRepositoryImpl(dataSource);
 });

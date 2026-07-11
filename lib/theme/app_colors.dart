@@ -1,38 +1,21 @@
-// lib/theme/app_colors.dart
-
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // ── Fondos ────────────────────────────────────────────────
-  static const Color background  = Color(0xFF0A0A0F);
-  static const Color surface     = Color(0xFF111118);
-  static const Color surface2    = Color(0xFF1A1A24);
-  static const Color border      = Color(0xFF2A2A38);
-  static const Color borderLight = Color(0xFF1E1E2A);
+  // 🖤 Fondo y ⬛ Tarjetas
+  static const Color background = Color(0xFF121212);
+  static const Color cardBackground = Color(0xFF2B2B2B);
 
-  // ── Texto ─────────────────────────────────────────────────
-  static const Color textPrimary   = Color(0xFFF0F0F8);
-  static const Color textSecondary = Color(0xFF8888AA);
-  static const Color textFaint     = Color(0xFF44445A);
+  // 🟣 Morados
+  static const Color primary = Color(0xFFA83DE8);
+  static const Color primaryDark = Color(0xFF8A2BE2);
 
-  // ── Accent dorado ─────────────────────────────────────────
-  static const Color accent      = Color(0xFFD4A843);
-  static const Color accentLight = Color(0xFFF0C96E);
-  static const Color accentDark  = Color(0xFFA07820);
-  static const Color onAccent    = Color(0xFF0A0A0F);
+  // 🟢🔴🟡 Colores de Estado (Feedback)
+  static const Color success = Color(0xFF34C759);
+  static const Color error = Color(0xFFE74C3C);
+  static const Color warning = Color(0xFFF4C542);
 
-  // ── Semánticos ────────────────────────────────────────────
-  static const Color success = Color(0xFF22C55E);
-  static const Color warning = Color(0xFFF59E0B);
-  static const Color error   = Color(0xFFEF4444);
-  static const Color info    = Color(0xFF3B82F6);
-
-  // ── Estado de pedido ──────────────────────────────────────
-  static const Color statusPending   = Color(0xFFF59E0B);
-  static const Color statusConfirmed = Color(0xFF3B82F6);
-  static const Color statusShipped   = Color(0xFF8B5CF6);
-  static const Color statusDelivered = Color(0xFF22C55E);
-  static const Color statusCancelled = Color(0xFFEF4444);
-
-  AppColors._();
+  // ⚪⚫⚙️ Neutros y Textos
+  static const Color white = Color(0xFFFFFFFF);
+  static const Color textLight = Color(0xFFBDBDBD);
+  static const Color iconGray = Color(0xFF8E8E93);
 }
