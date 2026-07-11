@@ -9,7 +9,7 @@ class ClienteRemoteDatasource {
   ClienteRemoteDatasource(this._dio);
 
   Future<List<Cliente>> getClientes() async {
-    final response = await _dio.get('/inventario/clientes/'); // Ajusta a tu endpoint real
+    final response = await _dio.get('/clientes/'); 
     if (response.statusCode == 200) {
       final List<dynamic> data = response.data;
       return data.map((json) => Cliente.fromJson(json)).toList();
@@ -35,8 +35,7 @@ class ClienteRemoteDatasource {
   }
 }
 
-// Provider del datasource para inyección de dependencias
 final clienteDatasourceProvider = Provider<ClienteRemoteDatasource>((ref) {
-  final dio = ref.watch(dioProvider); // Asumiendo que ya tienes un dioProvider configurado
+  final dio = ref.watch(dioProvider); 
   return ClienteRemoteDatasource(dio);
 });

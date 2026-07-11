@@ -49,7 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // Escuchar cambios de estado para navegar
     ref.listen<AuthState>(authProvider, (_, next) {
       if (next.isAuthenticated) {
-        final dest = next.isStaff ? '/admin' : '/';
+        final dest = next.isStaff ? '/admin' : '/profile';
         context.go(dest);
       }
     });

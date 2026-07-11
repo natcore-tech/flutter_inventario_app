@@ -87,7 +87,7 @@ class _SinTurnoCard extends StatelessWidget {
                 onPressed: onAbrir,
                 icon: const Icon(Icons.lock_open_rounded, size: 18),
                 label: const Text('Abrir turno de caja'),
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.success),
+                style: ElevatedButton.styleFrom(backgroundColor: AppColors.accent),
               ),
             ),
             const SizedBox(height: 8),

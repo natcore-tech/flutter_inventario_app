@@ -13,17 +13,18 @@ class AdminNavItem {
   const AdminNavItem({required this.label, required this.icon, required this.route});
 }
 
-// ⚠️ TEMPORAL: solo quedan los módulos que existen en esta rama
-// (Clientes y Turno de Caja son tuyos; Usuarios es de Auth/genérico).
+// ⚠️ TEMPORAL: solo quedan los módulos que existen en esta rama.
 // Se restauran Dashboard/Categorías/Productos/Pedidos al integrar
 // con el resto del equipo.
 const adminNavItems = [
-  AdminNavItem(label: 'Clientes',      icon: Icons.people_alt_outlined,   route: '/admin'),
-  AdminNavItem(label: 'Turno de Caja', icon: Icons.point_of_sale_rounded, route: '/admin/turno-caja'),
-  AdminNavItem(label: 'Usuarios',      icon: Icons.people_outline,        route: '/admin/users'),
+  AdminNavItem(label: 'Clientes',       icon: Icons.people_alt_outlined,   route: '/admin'),
+  AdminNavItem(label: 'Turno de Caja',  icon: Icons.point_of_sale_rounded, route: '/admin/turno-caja'),
+  AdminNavItem(label: 'Registrar Venta',icon: Icons.shopping_cart_checkout_rounded, route: '/admin/venta'),
+  AdminNavItem(label: 'Métodos de Pago',icon: Icons.payments_outlined,     route: '/admin/metodos-pago'),
+  AdminNavItem(label: 'Usuarios',       icon: Icons.people_outline,        route: '/admin/users'),
 ];
 
-/// Evita que `/admin/turno-caja` resalte "Clientes" (`/admin` es prefijo de todas las rutas admin).
+/// Evita que rutas hijas resalten "Clientes" (`/admin` es prefijo de todas las rutas admin).
 int adminSelectedIndex(String currentRoute) {
   if (currentRoute == '/admin') return 0;
   final idx = adminNavItems.indexWhere(
@@ -52,8 +53,6 @@ class AdminShell extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        // ⚠️ TEMPORAL: se quitó el botón "← Tienda" porque la zona
-        // pública ('/') todavía no existe en esta rama.
       ),
       drawer: NavigationDrawer(
         selectedIndex: adminSelectedIndex(currentRoute),
@@ -64,16 +63,15 @@ class AdminShell extends ConsumerWidget {
         children: [
           // Header del drawer
           Container(
-            color:   AppColors.surface2,
+            color: AppColors.surface2,
             padding: const EdgeInsets.fromLTRB(20, 48, 20, 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Avatar
                 Row(
                   children: [
                     Container(
-                      width:  48, height: 48,
+                      width: 48, height: 48,
                       decoration: const BoxDecoration(
                         gradient: LinearGradient(
                           colors: [AppColors.accent, AppColors.accentLight],
@@ -86,9 +84,9 @@ class AdminShell extends ConsumerWidget {
                               ? user!.username[0].toUpperCase()
                               : 'A',
                           style: const TextStyle(
-                            color:      AppColors.onAccent,
+                            color: AppColors.onAccent,
                             fontWeight: FontWeight.bold,
-                            fontSize:   20,
+                            fontSize: 20,
                           ),
                         ),
                       ),
@@ -100,22 +98,22 @@ class AdminShell extends ConsumerWidget {
                         Text(
                           user?.username ?? '—',
                           style: const TextStyle(
-                            color:      AppColors.textPrimary,
+                            color: AppColors.textPrimary,
                             fontWeight: FontWeight.bold,
-                            fontSize:   16,
+                            fontSize: 16,
                           ),
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color:        AppColors.accent.withValues(alpha: 0.15),
+                            color: AppColors.accent.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(999),
                           ),
                           child: const Text(
                             'Staff',
                             style: TextStyle(
-                              color:      AppColors.accent,
-                              fontSize:   11,
+                              color: AppColors.accent,
+                              fontSize: 11,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -135,19 +133,17 @@ class AdminShell extends ConsumerWidget {
           const Divider(height: 1),
           const SizedBox(height: 8),
 
-          // Items de navegación
           ...adminNavItems.map((item) => NavigationDrawerDestination(
-            icon:             Icon(item.icon),
-            selectedIcon:     Icon(item.icon, color: AppColors.accent),
-            label:            Text(item.label),
+            icon: Icon(item.icon),
+            selectedIcon: Icon(item.icon, color: AppColors.accent),
+            label: Text(item.label),
           )),
 
           const Divider(),
 
-          // Cerrar sesión
           ListTile(
             leading: const Icon(Icons.logout, color: AppColors.error),
-            title:   const Text('Cerrar sesión',
+            title: const Text('Cerrar sesión',
                 style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w600)),
             onTap: () async {
               Navigator.pop(context);

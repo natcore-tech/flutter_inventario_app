@@ -1,14 +1,15 @@
 // lib/presentation/navigation/app_router.dart
 //
 // ⚠️ VERSIÓN TEMPORAL mientras trabajas paso a paso en tu módulo.
-// Se quitaron: catálogo, carrito, pedidos, detalle de producto/pedido,
-// dashboard y PublicShell — porque dependen de módulos que aún no
-// existen en esta rama (Producto, Categoría, etc.). Se restauran al
-// integrar con el resto del equipo o cuando tú mismo los reconstruyas.
+// Solo existen las rutas de: Auth, Clientes, Turno de Caja, Venta,
+// Métodos de Pago y Usuarios. Catálogo/Carrito/Pedidos/Dashboard se
+// restauran al integrar con el resto del equipo.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/clientes_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/turno_caja_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/venta_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/metodo_pago_admin_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/model/auth_state.dart';
@@ -40,9 +41,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (!auth.isAuthenticated && !isAuthRoute) return '/login';
       if (auth.isAuthenticated && isAuthRoute) return '/admin';
 
-      // ⚠️ TEMPORAL: como todavía no existe la zona pública (catálogo,
-      // carrito, etc.), cualquier usuario autenticado se queda en /admin,
-      // sea staff o no. Ajusta esto cuando reconstruyas esas pantallas.
+      // ⚠️ TEMPORAL: sin zona pública todavía, cualquier usuario
+      // autenticado se queda en /admin.
 
       return null;
     },
@@ -64,9 +64,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/profile', builder: (_, __) => const ProfileScreen()),
 
       // ── Admin ─────────────────────────────────────────────
-      // ⚠️ TEMPORAL: /admin apunta a Clientes en vez de Dashboard
-      // (Dashboard depende de Productos/Categorías/Órdenes, que no
-      // existen todavía en esta rama).
       GoRoute(
         path: '/admin',
         builder: (_, s) => AdminShell(
@@ -89,6 +86,22 @@ final routerProvider = Provider<GoRouter>((ref) {
           title: 'Turno de Caja',
           currentRoute: s.matchedLocation,
           child: const TurnoCajaScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/admin/venta',
+        builder: (_, s) => AdminShell(
+          title: 'Registrar Venta',
+          currentRoute: s.matchedLocation,
+          child: const VentaScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/admin/metodos-pago',
+        builder: (_, s) => AdminShell(
+          title: 'Métodos de Pago',
+          currentRoute: s.matchedLocation,
+          child: const MetodoPagoAdminScreen(),
         ),
       ),
       GoRoute(

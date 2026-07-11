@@ -1,16 +1,8 @@
-// lib/presentation/providers/turno_caja_provider.dart
+// lib/presentation/providers/admin/turno_caja_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/remote/api/turno_caja_remote_datasource.dart';
+import '../../../data/remote/api/turno_caja_remote_datasource.dart';
 import '../../domain/model/turno_caja.dart';
-
-// ⚠️ AJUSTA este provider para que apunte a tu Dio/instancia real,
-// igual que category_datasource_provider en tu proyecto.
-final turnoCajaDatasourceProvider = Provider<TurnoCajaRemoteDatasource>((ref) {
-  throw UnimplementedError(
-    'Conecta aquí tu instancia real de Dio, igual que en categoryDatasourceProvider',
-  );
-});
 
 class TurnoCajaState {
   final TurnoCaja? turnoActual; // null = no hay turno abierto
@@ -68,10 +60,7 @@ class TurnoCajaNotifier extends StateNotifier<TurnoCajaState> {
           ? state.copyWith(turnoActual: turno, isLoading: false)
           : state.copyWith(clearTurno: true, isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error:     e.toString().replaceAll('Exception: ', ''),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -84,9 +73,7 @@ class TurnoCajaNotifier extends StateNotifier<TurnoCajaState> {
         formState:   const TurnoCajaFormSuccess('Turno abierto correctamente'),
       );
     } catch (e) {
-      state = state.copyWith(
-        formState: TurnoCajaFormError(e.toString().replaceAll('Exception: ', '')),
-      );
+      state = state.copyWith(formState: TurnoCajaFormError(e.toString()));
     }
   }
 
@@ -109,9 +96,7 @@ class TurnoCajaNotifier extends StateNotifier<TurnoCajaState> {
         formState:  const TurnoCajaFormSuccess('Turno cerrado correctamente'),
       );
     } catch (e) {
-      state = state.copyWith(
-        formState: TurnoCajaFormError(e.toString().replaceAll('Exception: ', '')),
-      );
+      state = state.copyWith(formState: TurnoCajaFormError(e.toString()));
     }
   }
 
