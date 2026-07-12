@@ -24,7 +24,7 @@ Categoria copyWith({
             activo: activo ?? this.activo,
             );
         }
-}
+
 
 factory Categoria.fromJson(Map<String, dynamic> json) {
     return Categoria(
@@ -41,4 +41,5 @@ Map<String, dynamic> toJson() {
         'descripcion': descripcion,
         'activo': activo,
     };
+  }
 }

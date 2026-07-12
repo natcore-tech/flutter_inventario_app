@@ -12,8 +12,9 @@ class ProductoRepositoryImpl implements ProductoRepository {
     Future<List<Producto>> getProductos({String? categoriaId, String? marcaId}) => 
         remoteDataSource.getProductos(categoriaId: categoriaId, marcaId: marcaId);
 
+    // CORRECCIÓN: Quitamos el '?' para que coincida exactamente con el DataSource
     @override
-    Future<Producto?> getProductoById(String id) => remoteDataSource.getProductoById(id);
+    Future<Producto> getProductoById(String id) => remoteDataSource.getProductoById(id);
 
     @override
     Future<Producto> createProducto(Producto producto) => remoteDataSource.createProducto(producto);
