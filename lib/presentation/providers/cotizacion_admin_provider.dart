@@ -1,23 +1,14 @@
 // lib/presentation/providers/admin/cotizacion_admin_provider.dart
 import 'package:flutter_inventario_app/presentation/domain/model/cotizacion.dart';
-import 'package:flutter_inventario_app/presentation/domain/model/producto_lite.dart';
 import 'package:flutter_inventario_app/presentation/domain/model/proveedor_lite.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/remote/api/cotizacion_remote_datasource.dart';
 import '../../../data/remote/api/proveedor_lite_remote_datasource.dart';
-import '../../../data/remote/api/producto_lite_remote_datasource.dart';
+export 'producto_search_provider.dart' show productosSearchProvider;
 
 // ── Datos de apoyo para el selector de proveedor ────────────────
 final proveedoresListProvider = FutureProvider<List<ProveedorLite>>((ref) {
   return ref.watch(proveedorLiteDatasourceProvider).getProveedores();
-});
-
-// ── Datos de apoyo para buscar productos a cotizar ──────────────
-// (definido aquí, NO en venta_provider.dart, para que esta rama
-// (feature/gestion-comercial) no dependa de feature/facturacion-pos)
-final productosSearchProvider =
-    FutureProvider.family<List<ProductoLite>, String>((ref, query) {
-  return ref.watch(productoLiteDatasourceProvider).getProductos(search: query);
 });
 
 class CotizacionAdminState {

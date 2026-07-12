@@ -23,6 +23,8 @@ import '../screens/admin/order_admin_detail_screen.dart';
 import '../screens/admin/orders_admin_screen.dart';
 import '../screens/admin/products_admin_screen.dart';
 import '../screens/admin/users_admin_screen.dart';
+import '../screens/admin/cotizacion_admin_screen.dart';
+import '../screens/admin/devolucion_cliente_admin_screen.dart';
 import '../widgets/admin_shell.dart';
 import 'public_shell.dart';
 
@@ -128,6 +130,22 @@ final routerProvider = Provider<GoRouter>((ref) {
           child:        OrderAdminDetailScreen(
             orderId: int.parse(s.pathParameters['id']!),
           ),
+        ),
+      ),
+      GoRoute(
+        path:    '/admin/cotizaciones',
+        builder: (_, s) => AdminShell(
+          title:        'Cotizaciones',
+          currentRoute: s.matchedLocation,
+          child:        const CotizacionAdminScreen(),
+        ),
+      ),
+      GoRoute(
+        path:    '/admin/devoluciones',
+        builder: (_, s) => AdminShell(
+          title:        'Devoluciones',
+          currentRoute: s.matchedLocation,
+          child:        const DevolucionClienteAdminScreen(),
         ),
       ),
       GoRoute(

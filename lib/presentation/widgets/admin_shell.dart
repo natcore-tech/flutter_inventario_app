@@ -14,14 +14,17 @@ class AdminNavItem {
 }
 
 const adminNavItems = [
-  AdminNavItem(label: 'Dashboard',  icon: Icons.dashboard_outlined,       route: '/admin'),
-  AdminNavItem(label: 'Categorías', icon: Icons.category_outlined,        route: '/admin/categories'),
-  AdminNavItem(label: 'Productos',  icon: Icons.inventory_2_outlined,     route: '/admin/products'),
-  AdminNavItem(label: 'Pedidos',    icon: Icons.shopping_bag_outlined,    route: '/admin/orders'),
-  AdminNavItem(label: 'Usuarios',   icon: Icons.people_outline,           route: '/admin/users'),
+  AdminNavItem(label: 'Dashboard',      icon: Icons.dashboard_outlined,       route: '/admin'),
+  AdminNavItem(label: 'Categorías',     icon: Icons.category_outlined,        route: '/admin/categories'),
+  AdminNavItem(label: 'Productos',      icon: Icons.inventory_2_outlined,     route: '/admin/products'),
+  AdminNavItem(label: 'Pedidos',        icon: Icons.shopping_bag_outlined,    route: '/admin/orders'),
+  AdminNavItem(label: 'Cotizaciones',   icon: Icons.request_quote_outlined,   route: '/admin/cotizaciones'),
+  AdminNavItem(label: 'Devoluciones',   icon: Icons.undo_rounded,             route: '/admin/devoluciones'),
+  AdminNavItem(label: 'Usuarios',       icon: Icons.people_outline,           route: '/admin/users'),
 ];
 
-/// Evita que `/admin/orders` resalte "Dashboard" (`/admin` es prefijo de todas las rutas admin).
+/// Evita que rutas hijas (ej. `/admin/orders/:id`) resalten "Dashboard"
+/// (`/admin` es prefijo de todas las rutas admin).
 int adminSelectedIndex(String currentRoute) {
   if (currentRoute == '/admin') return 0;
   final idx = adminNavItems.indexWhere(
