@@ -1,41 +1,31 @@
-// lib/data/remote/api/producto_lite_remote_datasource.dart
+// lib/presentation/domain/model/producto_lite.dart
 //
-// Datasource de SOLO LECTURA sobre /productos/. No incluye create/update/
-// delete (eso vive en el módulo de Micky). Existe para que tu pantalla
-// de Venta pueda buscar y elegir productos sin depender de su código.
+// Modelo de SOLO LECTURA para elegir productos al armar una venta.
+// No es el CRUD completo de Producto (eso es de Micky) — solo lo
+// necesario para el carrito: nombre, precio, stock disponible.
 
-import 'package:dio/dio.dart';
-import 'package:flutter_inventario_app/data/remote/api/dio_client.dart';
-import 'package:flutter_inventario_app/domain/model/producto_lite.dart';
-import 'package:flutter_inventario_app/presentation/domain/model/producto_lite.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+class ProductoLite {
+  final int     id;
+  final String  nombre;
+  final double  precio;
+  final int     stock;
+  final bool    esActivo;
 
-class ProductoLiteRemoteDatasource {
-  final Dio _dio;
-  ProductoLiteRemoteDatasource(this._dio);
+  const ProductoLite({
+    required this.id,
+    required this.nombre,
+    required this.precio,
+    required this.stock,
+    required this.esActivo,
+  });
 
-  static const _basePath = '/productos/';
+  bool get enStock => stock > 0;
 
-  Future<List<ProductoLite>> getProductos({String? search}) async {
-    final response = await _dio.get(_basePath, queryParameters: {
-      if (search != null && search.isNotEmpty) 'search': search,
-    });
-    if (response.statusCode == 200) {
-      final raw = response.data;
-      final List<dynamic> data = raw is Map<String, dynamic>
-          ? (raw['results'] as List<dynamic>)
-          : raw as List<dynamic>;
-      return data
-          .map((json) => ProductoLite.fromJson(json))
-          .where((p) => p.esActivo)
-          .toList();
-    }
-    throw Exception('Error al cargar productos: ${response.statusCode}');
-  }
+  factory ProductoLite.fromJson(Map<String, dynamic> json) => ProductoLite(
+        id:       json['id'] as int,
+        nombre:   json['nombre'] as String,
+        precio:   double.parse(json['precio'].toString()),
+        stock:    json['stock'] as int,
+        esActivo: json['es_activo'] as bool? ?? true,
+      );
 }
-
-final productoLiteDatasourceProvider =
-    Provider<ProductoLiteRemoteDatasource>((ref) {
-  final dio = ref.watch(dioProvider);
-  return ProductoLiteRemoteDatasource(dio);
-});

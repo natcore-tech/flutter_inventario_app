@@ -12,9 +12,7 @@ class AppColors {
   static const Color accentDark  = Color(0xFF8A2BE2); // 🟪 Morado oscuro
   static const Color onAccent    = Color(0xFFFFFFFF); // Blanco sobre morado
 
-  // ⚠️ Provisional: usado en gradientes (users_admin_screen.dart) pero
-  // NO está en tu paleta oficial. Dime el hex exacto si lo tienes definido,
-  // o si prefieres que las gradientes usen accentDark en su lugar.
+
   static const Color accentLight = Color(0xFFC070F0);
 
   // ── Estados (paleta oficial) ─────────────────────────────
@@ -22,9 +20,7 @@ class AppColors {
   static const Color error       = Color(0xFFE74C3C); // 🔴 Rojo
   static const Color warning     = Color(0xFFF4C542); // 🟡 Amarillo
 
-  // ⚠️ Provisional: usado en KPI "Categorías activas" (dashboard_screen.dart)
-  // pero NO está en tu paleta oficial. Dime el hex exacto o si prefieres
-  // reemplazarlo por accent/accentDark.
+
   static const Color info        = Color(0xFF3498DB);
 
   // ── Texto / iconos (paleta oficial) ──────────────────────

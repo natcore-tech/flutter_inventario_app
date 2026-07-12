@@ -1,7 +1,12 @@
 // lib/data/remote/api/producto_lite_remote_datasource.dart
+//
+// Datasource de SOLO LECTURA sobre /productos/. No incluye create/update/
+// delete (eso vive en el módulo de Micky). Existe para que tu pantalla
+// de Venta pueda buscar y elegir productos sin depender de su código.
+
 import 'package:dio/dio.dart';
 import 'package:flutter_inventario_app/data/remote/api/dio_client.dart';
-import 'package:flutter_inventario_app/domain/model/producto_lite.dart';
+import 'package:flutter_inventario_app/presentation/domain/model/producto_lite.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProductoLiteRemoteDatasource {
@@ -25,11 +30,6 @@ class ProductoLiteRemoteDatasource {
           .toList();
     }
     throw Exception('Error al cargar productos: ${response.statusCode}');
-  }
-
-  Future<ProductoLite> createProducto(Map<String, dynamic> payload) async {
-    final response = await _dio.post(_basePath, data: payload);
-    return ProductoLite.fromJson(response.data);
   }
 }
 
