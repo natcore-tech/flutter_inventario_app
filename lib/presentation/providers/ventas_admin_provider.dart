@@ -1,4 +1,4 @@
-
+// lib/presentation/providers/admin/ventas_admin_provider.dart
 import 'package:flutter_inventario_app/presentation/domain/model/venta.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/remote/api/venta_remote_datasource.dart';
