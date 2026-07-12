@@ -1,479 +1,345 @@
 // lib/presentation/screens/admin/venta_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:flutter_inventario_app/domain/model/producto_lite.dart';
+import 'package:flutter_inventario_app/presentation/domain/model/venta.dart';
 import 'package:flutter_inventario_app/presentation/providers/venta_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../theme/app_colors.dart';
 import '../../domain/model/producto_lite.dart';
 
-class VentaScreen extends ConsumerWidget {
-  const VentaScreen({super.key});
+Color _estadoColor(EstadoVenta e) => switch (e) {
+      EstadoVenta.pagada  => AppColors.success,
+      EstadoVenta.emitida => AppColors.warning,
+      EstadoVenta.anulada => AppColors.error,
+    };
+
+String _estadoLabel(EstadoVenta e) => switch (e) {
+      EstadoVenta.pagada  => 'Pagada',
+      EstadoVenta.emitida => 'Emitida',
+      EstadoVenta.anulada => 'Anulada',
+    };
+
+class VentasAdminScreen extends ConsumerWidget {
+  const VentasAdminScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cart = ref.watch(ventaCartProvider);
+    final state    = ref.watch(ventasAdminProvider);
+    final filtered = state.filtered;
 
-    // Mostrar resultado de la última venta confirmada (si existe)
-    if (cart.ultimaVentaConfirmada != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!context.mounted) return;
-        final v = cart.ultimaVentaConfirmada!;
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            backgroundColor: AppColors.surface,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            title: const Text('✅ Venta registrada',
-                style: TextStyle(color: AppColors.success)),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Venta #${v.id}', style: const TextStyle(color: AppColors.textPrimary)),
-                const SizedBox(height: 8),
-                Text('Subtotal: \$${v.subtotal.toStringAsFixed(2)}',
-                    style: const TextStyle(color: AppColors.textSecondary)),
-                Text('IVA (15%): \$${v.iva.toStringAsFixed(2)}',
-                    style: const TextStyle(color: AppColors.textSecondary)),
-                Text('Total: \$${v.total.toStringAsFixed(2)}',
-                    style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold)),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  ref.read(ventaCartProvider.notifier).reset();
-                },
-                child: const Text('Nueva venta'),
+    return Column(
+      children: [
+        Container(
+          color: AppColors.surface,
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Historial de Ventas',
+                          style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text('${state.ventas.length} ventas',
+                          style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                    ],
+                  ),
+                  IconButton(
+                    onPressed: () => ref.read(ventasAdminProvider.notifier).load(),
+                    icon: const Icon(Icons.refresh_rounded, color: AppColors.textSecondary),
+                  ),
+                ],
               ),
+              const SizedBox(height: 12),
+              TextField(
+                onChanged: ref.read(ventasAdminProvider.notifier).setSearch,
+                decoration: const InputDecoration(
+                  hintText: 'Buscar por cliente o # de venta...',
+                  prefixIcon: Icon(Icons.search_rounded, color: AppColors.textSecondary),
+                ),
+                style: const TextStyle(color: AppColors.textPrimary),
+              ),
+              const SizedBox(height: 12),
             ],
           ),
-        );
-      });
-    }
-
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        if (cart.error != null) ...[
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.error.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(cart.error!, style: const TextStyle(color: AppColors.error)),
-          ),
-          const SizedBox(height: 14),
-        ],
-
-        _ClienteSection(clienteId: cart.clienteId, nombreCliente: cart.nombreCliente),
-        const SizedBox(height: 16),
-
-        const _SectionTitle('Productos'),
-        const SizedBox(height: 8),
-        const _ProductoSearch(),
-        const SizedBox(height: 12),
-        _CarritoList(items: cart.items),
-        const SizedBox(height: 8),
-        Align(
-          alignment: Alignment.centerRight,
-          child: Text(
-            'Subtotal estimado: \$${cart.subtotalEstimado.toStringAsFixed(2)}',
-            style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
-          ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(top: 2),
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              'El IVA, promociones y total final los calcula el servidor.',
-              style: TextStyle(color: AppColors.textFaint, fontSize: 11),
-            ),
-          ),
+        Expanded(
+          child: Builder(builder: (_) {
+            if (state.isLoading) {
+              return const Center(child: CircularProgressIndicator(color: AppColors.accent));
+            }
+            if (state.error != null) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(state.error!, style: const TextStyle(color: AppColors.error)),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: () => ref.read(ventasAdminProvider.notifier).load(),
+                      child: const Text('Reintentar'),
+                    ),
+                  ],
+                ),
+              );
+            }
+            if (filtered.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('🧾', style: TextStyle(fontSize: 48)),
+                    const SizedBox(height: 12),
+                    Text(
+                      state.search.isEmpty ? 'Sin ventas registradas' : 'Sin resultados',
+                      style: const TextStyle(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return ListView.separated(
+              padding: const EdgeInsets.all(16),
+              itemCount: filtered.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 10),
+              itemBuilder: (_, i) => _VentaCard(venta: filtered[i]),
+            );
+          }),
         ),
-        const SizedBox(height: 20),
-
-        const _SectionTitle('Pagos'),
-        const SizedBox(height: 8),
-        const _PagoForm(),
-        const SizedBox(height: 12),
-        _PagosList(pagos: cart.pagos),
-        const SizedBox(height: 24),
-
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: cart.isSubmitting
-                ? null
-                : () => ref.read(ventaCartProvider.notifier).confirmarVenta(),
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.accent),
-            child: cart.isSubmitting
-                ? const SizedBox(
-                    width: 20, height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.onAccent),
-                  )
-                : const Text('Confirmar venta'),
-          ),
-        ),
-        const SizedBox(height: 32),
       ],
     );
   }
 }
 
-class _SectionTitle extends StatelessWidget {
-  final String text;
-  const _SectionTitle(this.text);
+class _VentaCard extends StatelessWidget {
+  final Venta venta;
+  const _VentaCard({required this.venta});
 
   @override
-  Widget build(BuildContext context) => Text(
-        text,
-        style: const TextStyle(
-          color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold,
-        ),
-      );
-}
+  Widget build(BuildContext context) {
+    final color = _estadoColor(venta.estado);
+    final fecha = '${venta.fechaEmision.day.toString().padLeft(2, '0')}/'
+        '${venta.fechaEmision.month.toString().padLeft(2, '0')}/'
+        '${venta.fechaEmision.year} '
+        '${venta.fechaEmision.hour.toString().padLeft(2, '0')}:'
+        '${venta.fechaEmision.minute.toString().padLeft(2, '0')}';
 
-// ── Selección de cliente ──────────────────────────────────────
-
-class _ClienteSection extends ConsumerWidget {
-  final int?    clienteId;
-  final String? nombreCliente;
-  const _ClienteSection({required this.clienteId, required this.nombreCliente});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.person_outline, color: AppColors.accent),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              nombreCliente ?? 'Selecciona un cliente',
-              style: TextStyle(
-                color: nombreCliente != null ? AppColors.textPrimary : AppColors.textFaint,
-                fontWeight: FontWeight.w600,
+    return GestureDetector(
+      onTap: () => _showDetalle(context, venta),
+      child: Opacity(
+        opacity: venta.estado == EstadoVenta.anulada ? 0.55 : 1.0,
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44, height: 44,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text('#${venta.id}',
+                      style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12)),
+                ),
               ),
-            ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(venta.nombreCliente,
+                        style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.w600)),
+                    Text(fecha, style: const TextStyle(color: AppColors.textFaint, fontSize: 11)),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('\$${venta.total.toStringAsFixed(2)}',
+                      style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
+                  Container(
+                    margin: const EdgeInsets.only(top: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(_estadoLabel(venta.estado),
+                        style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => _pickCliente(context, ref),
-            child: const Text('Elegir'),
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  void _pickCliente(BuildContext context, WidgetRef ref) {
+  void _showDetalle(BuildContext context, Venta venta) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.surface,
       isScrollControlled: true,
+      backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (_) => Consumer(
-        builder: (context, ref, __) {
-          final clientesAsync = ref.watch(clientesListProvider);
-          return SizedBox(
-            height: 420,
-            child: clientesAsync.when(
-              loading: () => const Center(
-                child: CircularProgressIndicator(color: AppColors.accent),
-              ),
-              error: (e, __) => Center(
-                child: Text('Error: $e', style: const TextStyle(color: AppColors.error)),
-              ),
-              data: (clientes) => ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: clientes.length,
-                itemBuilder: (_, i) {
-                  final c = clientes[i];
-                  return ListTile(
-                    title: Text(c.nombres, style: const TextStyle(color: AppColors.textPrimary)),
-                    subtitle: Text(c.identificacion,
-                        style: const TextStyle(color: AppColors.textSecondary)),
-                    onTap: () {
-                      ref.read(ventaCartProvider.notifier).seleccionarCliente(c.id, c.nombres);
-                      Navigator.pop(context);
-                    },
-                  );
-                },
+      builder: (_) => _VentaDetalleSheet(venta: venta),
+    );
+  }
+}
+
+class _VentaDetalleSheet extends ConsumerWidget {
+  final Venta venta;
+  const _VentaDetalleSheet({required this.venta});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final anulando = ref.watch(ventasAdminProvider.select((s) => s.anulandoId)) == venta.id;
+    final color = _estadoColor(venta.estado);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Center(
+              child: Container(
+                width: 40, height: 4,
+                margin: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(2)),
               ),
             ),
-          );
-        },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Venta #${venta.id}',
+                    style: const TextStyle(color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold)),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(999)),
+                  child: Text(_estadoLabel(venta.estado), style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text('Cliente: ${venta.nombreCliente}', style: const TextStyle(color: AppColors.textSecondary)),
+            Text('Cajero: ${venta.nombreCajero}', style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+            const SizedBox(height: 16),
+
+            const Text('Productos', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 6),
+            ...venta.detalles.map((d) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(child: Text('${d.cantidad}x ${d.nombreProducto}',
+                      style: const TextStyle(color: AppColors.textPrimary, fontSize: 13))),
+                  Text('\$${(d.subtotalLinea ?? 0).toStringAsFixed(2)}',
+                      style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                ],
+              ),
+            )),
+            const Divider(color: AppColors.border, height: 24),
+
+            _totalRow('Subtotal', venta.subtotal),
+            _totalRow('IVA', venta.iva),
+            _totalRow('Total', venta.total, bold: true),
+            const SizedBox(height: 16),
+
+            const Text('Pagos', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 6),
+            if (venta.pagos.isEmpty)
+              const Text('Sin pagos registrados', style: TextStyle(color: AppColors.textFaint, fontSize: 12))
+            else
+              ...venta.pagos.map((p) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(p.nombreMetodo, style: const TextStyle(color: AppColors.textPrimary, fontSize: 13)),
+                    Text('\$${p.monto.toStringAsFixed(2)}',
+                        style: const TextStyle(color: AppColors.success, fontSize: 13, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              )),
+            const SizedBox(height: 24),
+
+            if (venta.estado != EstadoVenta.anulada)
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: anulando ? null : () => _confirmarAnular(context, ref),
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: AppColors.error),
+                    foregroundColor: AppColors.error,
+                  ),
+                  child: anulando
+                      ? const SizedBox(
+                          width: 18, height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.error),
+                        )
+                      : const Text('Anular venta'),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
-}
 
-// ── Búsqueda / agregar productos ──────────────────────────────
-
-class _ProductoSearch extends ConsumerStatefulWidget {
-  const _ProductoSearch();
-
-  @override
-  ConsumerState<_ProductoSearch> createState() => _ProductoSearchState();
-}
-
-class _ProductoSearchState extends ConsumerState<_ProductoSearch> {
-  final _ctrl = TextEditingController();
-  String _query = '';
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final resultsAsync = ref.watch(productosSearchProvider(_query));
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _totalRow(String label, double value, {bool bold = false}) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 2),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        TextField(
-          controller: _ctrl,
-          onChanged: (v) => setState(() => _query = v),
-          decoration: const InputDecoration(
-            hintText: 'Buscar producto...',
-            prefixIcon: Icon(Icons.search_rounded, color: AppColors.textSecondary),
-          ),
-          style: const TextStyle(color: AppColors.textPrimary),
-        ),
-        const SizedBox(height: 8),
-        resultsAsync.when(
-          loading: () => const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
-            child: Center(child: CircularProgressIndicator(color: AppColors.accent)),
-          ),
-          error: (e, __) => Text('Error: $e', style: const TextStyle(color: AppColors.error)),
-          data: (productos) {
-            if (productos.isEmpty) {
-              return const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: Text('Sin resultados', style: TextStyle(color: AppColors.textFaint)),
-              );
-            }
-            return SizedBox(
-              height: 180,
-              child: ListView.separated(
-                itemCount: productos.length,
-                separatorBuilder: (_, __) => const Divider(color: AppColors.border, height: 1),
-                itemBuilder: (_, i) => _ProductoTile(producto: productos[i]),
-              ),
-            );
-          },
-        ),
+        Text(label, style: TextStyle(
+          color: bold ? AppColors.textPrimary : AppColors.textSecondary,
+          fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+        )),
+        Text('\$${value.toStringAsFixed(2)}', style: TextStyle(
+          color: bold ? AppColors.accent : AppColors.textSecondary,
+          fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+        )),
       ],
-    );
-  }
-}
+    ),
+  );
 
-class _ProductoTile extends ConsumerWidget {
-  final ProductoLite producto;
-  const _ProductoTile({required this.producto});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) => ListTile(
-        dense: true,
-        title: Text(producto.nombre, style: const TextStyle(color: AppColors.textPrimary)),
-        subtitle: Text(
-          '\$${producto.precio.toStringAsFixed(2)} · Stock: ${producto.stock}',
-          style: TextStyle(
-            color: producto.enStock ? AppColors.textSecondary : AppColors.error,
-            fontSize: 12,
+  void _confirmarAnular(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('¿Anular esta venta?', style: TextStyle(color: AppColors.textPrimary)),
+        content: const Text(
+          'La venta quedará marcada como anulada. Esta acción no se puede deshacer desde la app.',
+          style: TextStyle(color: AppColors.textSecondary),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // cierra el diálogo de confirmación
+              Navigator.pop(context); // cierra el bottom sheet de detalle
+              ref.read(ventasAdminProvider.notifier).anularVenta(venta.id);
+            },
+            child: const Text('Anular', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.bold)),
           ),
-        ),
-        trailing: IconButton(
-          icon: const Icon(Icons.add_circle, color: AppColors.accent),
-          onPressed: producto.enStock
-              ? () => ref.read(ventaCartProvider.notifier).agregarProducto(producto)
-              : null,
-        ),
-      );
-}
-
-// ── Carrito ───────────────────────────────────────────────────
-
-class _CarritoList extends ConsumerWidget {
-  final List<CartItem> items;
-  const _CarritoList({required this.items});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    if (items.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 12),
-        child: Text('Carrito vacío', style: TextStyle(color: AppColors.textFaint)),
-      );
-    }
-    return Column(
-      children: items.map((it) => Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: AppColors.surface2,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(it.producto.nombre, style: const TextStyle(color: AppColors.textPrimary)),
-                  Text('\$${it.producto.precio.toStringAsFixed(2)} c/u',
-                      style: const TextStyle(color: AppColors.textFaint, fontSize: 11)),
-                ],
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.remove_circle_outline, size: 20),
-              color: AppColors.textSecondary,
-              onPressed: () => ref.read(ventaCartProvider.notifier)
-                  .cambiarCantidad(it.producto.id, it.cantidad - 1),
-            ),
-            Text('${it.cantidad}', style: const TextStyle(color: AppColors.textPrimary)),
-            IconButton(
-              icon: const Icon(Icons.add_circle_outline, size: 20),
-              color: AppColors.accent,
-              onPressed: () => ref.read(ventaCartProvider.notifier)
-                  .cambiarCantidad(it.producto.id, it.cantidad + 1),
-            ),
-            Text('\$${it.subtotalEstimado.toStringAsFixed(2)}',
-                style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
-            IconButton(
-              icon: const Icon(Icons.delete_outline, size: 20),
-              color: AppColors.error,
-              onPressed: () => ref.read(ventaCartProvider.notifier).quitarProducto(it.producto.id),
-            ),
-          ],
-        ),
-      )).toList(),
-    );
-  }
-}
-
-// ── Pagos ─────────────────────────────────────────────────────
-
-class _PagoForm extends ConsumerStatefulWidget {
-  const _PagoForm();
-
-  @override
-  ConsumerState<_PagoForm> createState() => _PagoFormState();
-}
-
-class _PagoFormState extends ConsumerState<_PagoForm> {
-  int? _metodoId;
-  String _metodoNombre = '';
-  final _montoCtrl = TextEditingController();
-
-  @override
-  void dispose() {
-    _montoCtrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final metodosAsync = ref.watch(metodosPagoListProvider);
-
-    return Row(
-      children: [
-        Expanded(
-          child: metodosAsync.when(
-            loading: () => const LinearProgressIndicator(color: AppColors.accent),
-            error: (e, __) => Text('Error: $e', style: const TextStyle(color: AppColors.error)),
-            data: (metodos) => DropdownButtonFormField<int>(
-              initialValue: _metodoId,
-              decoration: const InputDecoration(labelText: 'Método'),
-              dropdownColor: AppColors.surface2,
-              style: const TextStyle(color: AppColors.textPrimary),
-              items: metodos.map((m) => DropdownMenuItem(
-                value: m.id,
-                child: Text(m.nombre),
-              )).toList(),
-              onChanged: (v) {
-                final m = metodos.firstWhere((m) => m.id == v);
-                setState(() { _metodoId = v; _metodoNombre = m.nombre; });
-              },
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        SizedBox(
-          width: 110,
-          child: TextField(
-            controller: _montoCtrl,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: const InputDecoration(labelText: 'Monto', prefixText: r'$ '),
-            style: const TextStyle(color: AppColors.textPrimary),
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.add_circle, color: AppColors.accent),
-          onPressed: () {
-            final monto = double.tryParse(_montoCtrl.text.trim().replaceAll(',', '.'));
-            if (_metodoId == null || monto == null || monto <= 0) return;
-            ref.read(ventaCartProvider.notifier).agregarPago(_metodoId!, _metodoNombre, monto);
-            _montoCtrl.clear();
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class _PagosList extends ConsumerWidget {
-  final List<PagoDraft> pagos;
-  const _PagosList({required this.pagos});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    if (pagos.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 4),
-        child: Text('Sin pagos registrados (opcional al crear)',
-            style: TextStyle(color: AppColors.textFaint, fontSize: 12)),
-      );
-    }
-    return Column(
-      children: List.generate(pagos.length, (i) {
-        final p = pagos[i];
-        return ListTile(
-          dense: true,
-          contentPadding: EdgeInsets.zero,
-          title: Text(p.nombreMetodo, style: const TextStyle(color: AppColors.textPrimary)),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('\$${p.monto.toStringAsFixed(2)}',
-                  style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.bold)),
-              IconButton(
-                icon: const Icon(Icons.close, size: 18),
-                color: AppColors.error,
-                onPressed: () => ref.read(ventaCartProvider.notifier).quitarPago(i),
-              ),
-            ],
-          ),
-        );
-      }),
+        ],
+      ),
     );
   }
 }

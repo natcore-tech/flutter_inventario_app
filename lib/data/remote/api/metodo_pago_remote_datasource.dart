@@ -1,7 +1,7 @@
 // lib/data/remote/api/metodo_pago_remote_datasource.dart
 import 'package:dio/dio.dart';
 import 'package:flutter_inventario_app/data/remote/api/dio_client.dart';
-import 'package:flutter_inventario_app/domain/model/metodo_pago.dart';
+import 'package:flutter_inventario_app/presentation/domain/model/metodo_pago.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MetodoPagoRemoteDatasource {
@@ -23,21 +23,13 @@ class MetodoPagoRemoteDatasource {
   }
 
   Future<MetodoPago> createMetodoPago(Map<String, dynamic> payload) async {
-    try {
-      final response = await _dio.post(_basePath, data: payload);
-      return MetodoPago.fromJson(response.data);
-    } on DioException catch (e) {
-      throw Exception(_parseError(e));
-    }
+    final response = await _dio.post(_basePath, data: payload);
+    return MetodoPago.fromJson(response.data);
   }
 
   Future<MetodoPago> updateMetodoPago(int id, Map<String, dynamic> payload) async {
-    try {
-      final response = await _dio.patch('$_basePath$id/', data: payload);
-      return MetodoPago.fromJson(response.data);
-    } on DioException catch (e) {
-      throw Exception(_parseError(e));
-    }
+    final response = await _dio.patch('$_basePath$id/', data: payload);
+    return MetodoPago.fromJson(response.data);
   }
 
   Future<void> deleteMetodoPago(int id) async {
@@ -46,20 +38,9 @@ class MetodoPagoRemoteDatasource {
       throw Exception('Error al eliminar el método de pago');
     }
   }
-
-  String _parseError(DioException e) {
-    final data = e.response?.data;
-    if (data is Map) {
-      final firstError = data.values.first;
-      if (firstError is List && firstError.isNotEmpty) return firstError.first.toString();
-      if (firstError is String) return firstError;
-    }
-    return 'No se pudo completar la operación. Intenta de nuevo.';
-  }
 }
 
-final metodoPagoDatasourceProvider =
-    Provider<MetodoPagoRemoteDatasource>((ref) {
+final metodoPagoDatasourceProvider = Provider<MetodoPagoRemoteDatasource>((ref) {
   final dio = ref.watch(dioProvider);
   return MetodoPagoRemoteDatasource(dio);
 });

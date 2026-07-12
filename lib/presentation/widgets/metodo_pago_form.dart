@@ -4,7 +4,7 @@ import 'package:flutter_inventario_app/presentation/providers/metodo_pago_admin_
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_colors.dart';
 import '../../core/utils/validators.dart';
-import '../../domain/model/metodo_pago.dart';
+import '../../presentation/domain/model/metodo_pago.dart';
 
 Future<void> showMetodoPagoForm(
   BuildContext context,

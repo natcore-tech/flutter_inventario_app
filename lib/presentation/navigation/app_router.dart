@@ -1,14 +1,9 @@
 // lib/presentation/navigation/app_router.dart
-//
-// ⚠️ VERSIÓN TEMPORAL mientras trabajas paso a paso en tu módulo.
-// Solo existen las rutas de: Auth, Clientes, Turno de Caja, Venta,
-// Métodos de Pago y Usuarios. Catálogo/Carrito/Pedidos/Dashboard se
-// restauran al integrar con el resto del equipo.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/clientes_admin_screen.dart';
-import 'package:flutter_inventario_app/presentation/screens/admin/productos_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/turno_caja_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/venta_form_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/venta_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/metodo_pago_admin_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +16,11 @@ import '../screens/auth/profile_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/auth/reset_password_confirm_screen.dart';
 import '../screens/admin/send_notification_screen.dart';
+import '../screens/admin/dashboard_screen.dart';
+import '../screens/admin/categories_admin_screen.dart';
+import '../screens/admin/products_admin_screen.dart';
+import '../screens/admin/orders_admin_screen.dart';
+import '../screens/admin/order_admin_detail_screen.dart';
 import '../screens/admin/users_admin_screen.dart';
 import '../widgets/admin_shell.dart';
 
@@ -68,10 +68,42 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/admin',
         builder: (_, s) => AdminShell(
-          title: 'Clientes',
+          title: 'Dashboard',
           currentRoute: s.matchedLocation,
-          child: const ClientesAdminScreen(),
+          child: const DashboardScreen(),
         ),
+      ),
+      GoRoute(
+        path: '/admin/categories',
+        builder: (_, s) => AdminShell(
+          title: 'Categorías',
+          currentRoute: s.matchedLocation,
+          child: const CategoriesAdminScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/admin/products',
+        builder: (_, s) => AdminShell(
+          title: 'Productos',
+          currentRoute: s.matchedLocation,
+          child: const ProductsAdminScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/admin/orders',
+        builder: (_, s) => AdminShell(
+          title: 'Pedidos',
+          currentRoute: s.matchedLocation,
+          child: const OrdersAdminScreen(),
+        ),
+        routes: [
+          GoRoute(
+            path: ':id',
+            builder: (_, s) => OrderAdminDetailScreen(
+              orderId: int.parse(s.pathParameters['id']!),
+            ),
+          ),
+        ],
       ),
       GoRoute(
         path: '/admin/clientes',
@@ -79,14 +111,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           title: 'Clientes',
           currentRoute: s.matchedLocation,
           child: const ClientesAdminScreen(),
-        ),
-      ),
-      GoRoute(
-        path: '/admin/productos',
-        builder: (_, s) => AdminShell(
-          title: 'Productos',
-          currentRoute: s.matchedLocation,
-          child: const ProductosAdminScreen(),
         ),
       ),
       GoRoute(
@@ -103,6 +127,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           title: 'Registrar Venta',
           currentRoute: s.matchedLocation,
           child: const VentaScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/admin/ventas',
+        builder: (_, s) => AdminShell(
+          title: 'Historial de Ventas',
+          currentRoute: s.matchedLocation,
+          child: const VentasAdminScreen(),
         ),
       ),
       GoRoute(

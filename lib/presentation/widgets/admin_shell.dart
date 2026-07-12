@@ -14,23 +14,22 @@ class AdminNavItem {
 }
 
 // ⚠️ TEMPORAL: solo quedan los módulos que existen en esta rama.
-// Se restauran Dashboard/Categorías/Productos/Pedidos al integrar
+// Se restauran Dashboard/Categorías/Pedidos al integrar
 // con el resto del equipo.
 const adminNavItems = [
-  AdminNavItem(label: 'Clientes',       icon: Icons.people_alt_outlined,   route: '/admin'),
-  AdminNavItem(label: 'Turno de Caja',  icon: Icons.point_of_sale_rounded, route: '/admin/turno-caja'),
-  AdminNavItem(label: 'Registrar Venta',icon: Icons.shopping_cart_checkout_rounded, route: '/admin/venta'),
-  AdminNavItem(label: 'Métodos de Pago',icon: Icons.payments_outlined,     route: '/admin/metodos-pago'),
-  AdminNavItem(label: 'Productos',      icon: Icons.inventory_2_outlined,  route: '/admin/productos'),
-  AdminNavItem(label: 'Usuarios',       icon: Icons.people_outline,        route: '/admin/users'),
+  AdminNavItem(label: 'Clientes',        icon: Icons.people_alt_outlined,            route: '/admin/clientes'),
+  AdminNavItem(label: 'Turno de Caja',   icon: Icons.point_of_sale_rounded,          route: '/admin/turno-caja'),
+  AdminNavItem(label: 'Registrar Venta', icon: Icons.shopping_cart_checkout_rounded, route: '/admin/venta'),
+  AdminNavItem(label: 'Historial Ventas',icon: Icons.receipt_long_outlined,          route: '/admin/ventas'),
+  AdminNavItem(label: 'Métodos de Pago', icon: Icons.payments_outlined,              route: '/admin/metodos-pago'),
+  AdminNavItem(label: 'Productos',       icon: Icons.inventory_2_outlined,           route: '/admin/products'),
+  AdminNavItem(label: 'Usuarios',        icon: Icons.people_outline,                 route: '/admin/users'),
 ];
 
-/// Evita que rutas hijas resalten "Clientes" (`/admin` es prefijo de todas las rutas admin).
+/// Resalta el ítem del drawer cuyo route coincide (o es prefijo) de la ruta actual.
 int adminSelectedIndex(String currentRoute) {
-  if (currentRoute == '/admin') return 0;
   final idx = adminNavItems.indexWhere(
-    (i) => i.route != '/admin' &&
-        (currentRoute == i.route || currentRoute.startsWith('${i.route}/')),
+    (i) => currentRoute == i.route || currentRoute.startsWith('${i.route}/'),
   );
   return idx >= 0 ? idx : 0;
 }

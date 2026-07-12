@@ -22,7 +22,9 @@ class VentaRemoteDatasource {
     throw Exception('Error al cargar ventas: ${response.statusCode}');
   }
 
-
+  /// Crea la venta completa: cliente + carrito de productos + pagos.
+  /// El backend calcula precios (con promociones), IVA, total, descuenta
+  /// stock, y valida que exista un turno de caja abierto.
   Future<Venta> crearVenta({
     required int clienteId,
     required List<VentaDetalle> detalles,
@@ -33,6 +35,18 @@ class VentaRemoteDatasource {
         'cliente':  clienteId,
         'detalles': detalles.map((d) => d.toPayload()).toList(),
         'pagos':    pagos.map((p) => p.toPayload()).toList(),
+      });
+      return Venta.fromJson(response.data);
+    } on DioException catch (e) {
+      throw Exception(_parseError(e));
+    }
+  }
+
+  /// Anula una venta existente (no se borra el registro histórico).
+  Future<Venta> anularVenta(int id) async {
+    try {
+      final response = await _dio.patch('$_basePath$id/', data: {
+        'estado': 'ANULADA',
       });
       return Venta.fromJson(response.data);
     } on DioException catch (e) {

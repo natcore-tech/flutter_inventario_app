@@ -1,6 +1,6 @@
 // lib/presentation/screens/admin/metodo_pago_admin_screen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_inventario_app/domain/model/metodo_pago.dart';
+import 'package:flutter_inventario_app/presentation/domain/model/metodo_pago.dart';
 import 'package:flutter_inventario_app/presentation/providers/metodo_pago_admin_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../theme/app_colors.dart';

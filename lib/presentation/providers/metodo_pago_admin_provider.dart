@@ -1,7 +1,7 @@
-// lib/presentation/providers/admin/metodo_pago_admin_provider.dart
+// lib/presentation/providers/metodo_pago_admin_provider.dart
+import 'package:flutter_inventario_app/presentation/domain/model/metodo_pago.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../data/remote/api/metodo_pago_remote_datasource.dart';
-import '../../domain/model/metodo_pago.dart';
+import '../../data/remote/api/metodo_pago_remote_datasource.dart';
 
 class MetodoPagoAdminState {
   final List<MetodoPago> metodos;
@@ -71,7 +71,6 @@ class MetodoPagoAdminNotifier extends StateNotifier<MetodoPagoAdminState> {
 
   void setSearch(String q) => state = state.copyWith(search: q);
 
-  // Toggle optimista de activo/inactivo
   Future<void> toggleActivo(int id, bool esActivo) async {
     state = state.copyWith(
       metodos: state.metodos.map((m) =>
