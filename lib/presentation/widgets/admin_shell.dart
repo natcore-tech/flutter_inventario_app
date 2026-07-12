@@ -19,6 +19,12 @@ const adminNavItems = [
   AdminNavItem(label: 'Productos',  icon: Icons.inventory_2_outlined,     route: '/admin/products'),
   AdminNavItem(label: 'Pedidos',    icon: Icons.shopping_bag_outlined,    route: '/admin/orders'),
   AdminNavItem(label: 'Usuarios',   icon: Icons.people_outline,           route: '/admin/users'),
+  
+  // --- NUEVAS RUTAS TAREA 2 ---
+  AdminNavItem(label: 'Bodegas',    icon: Icons.warehouse_outlined,       route: '/admin/bodegas'),
+  AdminNavItem(label: 'Ubicaciones',icon: Icons.place_outlined,           route: '/admin/ubicaciones'),
+  AdminNavItem(label: 'Stock',      icon: Icons.inventory_outlined,       route: '/admin/stock'),
+  AdminNavItem(label: 'Alertas',    icon: Icons.warning_amber_outlined,   route: '/admin/alertas'),
 ];
 
 /// Evita que `/admin/orders` resalte "Dashboard" (`/admin` es prefijo de todas las rutas admin).
