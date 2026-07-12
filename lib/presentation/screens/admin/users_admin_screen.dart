@@ -277,12 +277,6 @@ class _UserCard extends StatelessWidget {
                 Text(user.email,
                     style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
                     overflow: TextOverflow.ellipsis),
-                Text(
-                  '${user.numOrders} pedido${user.numOrders != 1 ? "s" : ""}',
-                  style: const TextStyle(
-                    color: AppColors.accent, fontSize: 11, fontWeight: FontWeight.w600,
-                  ),
-                ),
               ],
             ),
           ),
