@@ -3,25 +3,43 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_colors.dart';
 import '../../core/utils/validators.dart';
 import '../../domain/model/stock_bodega.dart';
-import '../../domain/model/product.dart'; // Importación del modelo de Producto
+import '../../domain/model/bodega.dart';
+import '../../domain/model/product.dart';
 import '../providers/stock_bodegas_admin_provider.dart';
-import '../providers/bodegas_admin_provider.dart'; 
-import '../providers/products_admin_provider.dart'; 
 
-Future<void> showStockBodegaForm(BuildContext context, WidgetRef ref, {StockBodega? initial}) {
+Future<void> showStockBodegaForm(
+  BuildContext context,
+  WidgetRef ref, {
+  StockBodega? initial,
+  required List<Bodega> bodegas,
+  required List<Product> productos,
+}) {
   return showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: AppColors.surface,
     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-    builder: (_) => ProviderScope(parent: ProviderScope.containerOf(context), child: StockBodegaFormSheet(initial: initial)),
+    builder: (_) => ProviderScope(
+      parent: ProviderScope.containerOf(context),
+      child: StockBodegaFormSheet(initial: initial, bodegas: bodegas, productos: productos),
+    ),
   );
 }
 
 class StockBodegaFormSheet extends ConsumerStatefulWidget {
   final StockBodega? initial;
-  const StockBodegaFormSheet({super.key, this.initial});
-  @override ConsumerState<StockBodegaFormSheet> createState() => _StockBodegaFormSheetState();
+  final List<Bodega> bodegas;
+  final List<Product> productos;
+
+  const StockBodegaFormSheet({
+    super.key, 
+    this.initial, 
+    required this.bodegas, 
+    required this.productos,
+  });
+
+  @override 
+  ConsumerState<StockBodegaFormSheet> createState() => _StockBodegaFormSheetState();
 }
 
 class _StockBodegaFormSheetState extends ConsumerState<StockBodegaFormSheet> {
@@ -59,9 +77,6 @@ class _StockBodegaFormSheetState extends ConsumerState<StockBodegaFormSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final bodegasState = ref.watch(bodegasAdminProvider);
-    final productosState = ref.watch(productsAdminProvider);
-
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, left: 24, right: 24, top: 12),
       child: Form(
@@ -71,37 +86,34 @@ class _StockBodegaFormSheetState extends ConsumerState<StockBodegaFormSheet> {
           children: [
             Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 20), decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(2))),
             
-            // Dropdown de Bodegas
             DropdownButtonFormField<String>(
               value: _bodegaId,
               dropdownColor: AppColors.surface2,
               decoration: const InputDecoration(labelText: 'Bodega *'),
               style: const TextStyle(color: AppColors.textPrimary),
-              items: bodegasState.valueOrNull?.map((b) => DropdownMenuItem<String>(
+              items: widget.bodegas.map((b) => DropdownMenuItem<String>(
                 value: b.id.toString(), 
                 child: Text(b.nombre)
-              )).toList() ?? [],
+              )).toList(),
               onChanged: widget.initial == null ? (v) => setState(() => _bodegaId = v) : null,
               validator: (v) => v == null ? 'Seleccione una bodega' : null,
             ),
             const SizedBox(height: 12),
 
-            // Dropdown de Productos (AQUÍ ESTÁ LA CORRECCIÓN DE p.name y p.id.toString())
             DropdownButtonFormField<String>(
               value: _productoId,
               dropdownColor: AppColors.surface2,
               decoration: const InputDecoration(labelText: 'Producto *'),
               style: const TextStyle(color: AppColors.textPrimary),
-              items: productosState.valueOrNull?.map((p) => DropdownMenuItem<String>(
-                value: p.id.toString(), // Aseguramos que sea String
-                child: Text(p.name)     // Usamos 'name' como está en tu modelo[cite: 8]
-              )).toList() ?? [],
+              items: widget.productos.map((p) => DropdownMenuItem<String>(
+                value: p.id.toString(), 
+                child: Text(p.name)
+              )).toList(),
               onChanged: widget.initial == null ? (v) => setState(() => _productoId = v) : null,
               validator: (v) => v == null ? 'Seleccione un producto' : null,
             ),
             const SizedBox(height: 12),
 
-            // Cantidad
             TextFormField(
               controller: _cantidadCtrl, 
               keyboardType: TextInputType.number,
