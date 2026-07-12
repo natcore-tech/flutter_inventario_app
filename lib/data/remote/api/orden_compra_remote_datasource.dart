@@ -22,7 +22,7 @@ class OrdenCompraRemoteDataSource {
 
   Future<OrdenCompra> getOrdenCompraById(int id) async {
     try {
-      final response = await _dio.get('/ordenes_compra/$id/');
+      final response = await _dio.get('/ordenes-compra/$id/');
       return OrdenCompra.fromJson(response.data);
     } on DioException catch (e) {
       throw ApiException.fromDioError(e);
@@ -32,7 +32,7 @@ class OrdenCompraRemoteDataSource {
   Future<OrdenCompra> createOrdenCompra(OrdenCompra orden) async {
     try {
       final response = await _dio.post(
-        '/ordenes_compra/',
+        '/ordenes-compra/',
         data: orden.toJson(),
       );
       return OrdenCompra.fromJson(response.data);
@@ -44,7 +44,7 @@ class OrdenCompraRemoteDataSource {
   Future<OrdenCompra> updateOrdenCompra(OrdenCompra orden) async {
     try {
       final response = await _dio.patch(
-        '/ordenes_compra/${orden.id}/',
+        '/ordenes-compra/${orden.id}/',
         data: {'estado': orden.estado}, 
       );
       return OrdenCompra.fromJson(response.data);
@@ -55,7 +55,7 @@ class OrdenCompraRemoteDataSource {
 
   Future<void> deleteOrdenCompra(int id) async {
     try {
-      await _dio.delete('/ordenes_compra/$id/');
+      await _dio.delete('/ordenes-compra/$id/');
     } on DioException catch (e) {
       throw ApiException.fromDioError(e);
     }
