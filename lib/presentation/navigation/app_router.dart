@@ -1,6 +1,7 @@
 // lib/presentation/navigation/app_router.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/proveedores_admin_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/model/auth_state.dart';
@@ -136,6 +137,15 @@ final routerProvider = Provider<GoRouter>((ref) {
           title:        'Usuarios',
           currentRoute: s.matchedLocation,
           child:        const UsersAdminScreen(),
+        ),
+      ),
+
+      GoRoute(
+        path:   '/admin/proveedores',
+        builder: (_, s) => AdminShell(
+          title:        'Proveedores',
+          currentRoute: s.matchedLocation,
+          child:        const ProveedoresAdminScreen(),
         ),
       ),
     ],
