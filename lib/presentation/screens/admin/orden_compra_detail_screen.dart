@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inventario_app/presentation/widgets/numero_serie_form.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../theme/app_colors.dart';
-import '../../../domain/model/orden_compra.dart';
 import '../../providers/ordenes_compra_provider.dart';
 
 class OrdenCompraDetailScreen extends ConsumerWidget {
