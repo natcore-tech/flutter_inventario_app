@@ -1,6 +1,7 @@
 // lib/presentation/navigation/app_router.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/movimientos_inventario_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/numeros_serie_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/orden_compra_detail_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/ordenes_compra_admin_screen.dart';
@@ -178,6 +179,15 @@ final routerProvider = Provider<GoRouter>((ref) {
           title:        'Control de Seriales',
           currentRoute: s.matchedLocation,
           child:        const NumerosSerieAdminScreen(),
+        ),
+      ),
+
+      GoRoute(
+        path: '/admin/movimientos',
+        builder: (_, s) => AdminShell(
+          title: 'Movimientos',
+          currentRoute: s.matchedLocation,
+          child: const MovimientosInventarioAdminScreen(),
         ),
       ),
     ],
