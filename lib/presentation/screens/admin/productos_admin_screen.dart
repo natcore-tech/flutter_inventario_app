@@ -9,63 +9,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ProductosAdminScreen extends ConsumerWidget {
   const ProductosAdminScreen({super.key});
 
-  void _mostrarFormulario(BuildContext context, WidgetRef ref) {
-    final nombreCtrl = TextEditingController();
-    final precioCtrl = TextEditingController();
-    final stockCtrl = TextEditingController();
-    final categoriaIdCtrl = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Nuevo producto (prueba)'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(controller: nombreCtrl, decoration: const InputDecoration(labelText: 'Nombre')),
-              TextField(controller: precioCtrl, decoration: const InputDecoration(labelText: 'Precio'), keyboardType: TextInputType.number),
-              TextField(controller: stockCtrl, decoration: const InputDecoration(labelText: 'Stock'), keyboardType: TextInputType.number),
-              TextField(controller: categoriaIdCtrl, decoration: const InputDecoration(labelText: 'ID Categoría'), keyboardType: TextInputType.number),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
-          ElevatedButton(
-            onPressed: () async {
-              final payload = {
-                'nombre': nombreCtrl.text,
-                'descripcion': '',
-                'precio': double.tryParse(precioCtrl.text) ?? 0,
-                'stock': int.tryParse(stockCtrl.text) ?? 0,
-                'es_activo': true,
-                'categoria_id': 1,
-              };
-              try {
-                await ref.read(productosAdminProvider.notifier).createProducto(payload);
-                if (ctx.mounted) Navigator.pop(ctx);
-              } catch (e) {
-                ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text('Error: $e')));
-              }
-            },
-            child: const Text('Crear'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(productosAdminProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Productos (prueba)')),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _mostrarFormulario(context, ref),
-        child: const Icon(Icons.add),
-      ),
       body: Builder(builder: (_) {
         if (state.isLoading) return const Center(child: CircularProgressIndicator());
         if (state.error != null) return Center(child: Text('Error: ${state.error}'));

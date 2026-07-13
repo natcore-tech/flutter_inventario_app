@@ -1,7 +1,7 @@
 // lib/presentation/providers/admin/productos_admin_provider.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/remote/api/producto_lite_remote_datasource.dart';
-import '../../../domain/model/producto_lite.dart';
+import '../domain/model/producto_lite.dart';
 
 class ProductosAdminState {
   final List<ProductoLite> productos;
@@ -42,10 +42,6 @@ class ProductosAdminNotifier extends StateNotifier<ProductosAdminState> {
     }
   }
 
-  Future<void> createProducto(Map<String, dynamic> payload) async {
-    final created = await _datasource.createProducto(payload);
-    state = state.copyWith(productos: [created, ...state.productos]);
-  }
 }
 
 final productosAdminProvider =

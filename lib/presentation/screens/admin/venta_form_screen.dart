@@ -1,6 +1,5 @@
 // lib/presentation/screens/admin/venta_form_screen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_inventario_app/domain/model/producto_lite.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../data/remote/api/venta_remote_datasource.dart';
