@@ -1,6 +1,7 @@
 // lib/presentation/screens/admin/orden_compra_detail_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_inventario_app/presentation/widgets/numero_serie_form.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../theme/app_colors.dart';
 import '../../../domain/model/orden_compra.dart';
@@ -85,18 +86,9 @@ class OrdenCompraDetailScreen extends ConsumerWidget {
 
           if (orden.estado == 'PENDIENTE')
             ElevatedButton.icon(
-              onPressed: () async {
-                final ordenActualizada = OrdenCompra(
-                  id: orden.id,
-                  codigoOrden: orden.codigoOrden,
-                  proveedorId: orden.proveedorId,
-                  totalEstimado: orden.totalEstimado,
-                  detalles: orden.detalles,
-                  estado: 'RECIBIDA', 
-                );
-                
-                await ref.read(ordenesCompraProvider.notifier).actualizarEstadoOrden(ordenActualizada);
-              },
+              onPressed: () {
+             showNumeroSerieRegistroForm(context, ref, orden);
+           },
               icon: const Icon(Icons.check_circle_outline),
               label: const Text('Marcar como Recibida', style: TextStyle(fontSize: 16)),
               style: ElevatedButton.styleFrom(
