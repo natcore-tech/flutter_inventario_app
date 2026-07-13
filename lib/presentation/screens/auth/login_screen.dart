@@ -49,7 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // Escuchar cambios de estado para navegar
     ref.listen<AuthState>(authProvider, (_, next) {
       if (next.isAuthenticated) {
-        final dest = next.isStaff ? '/admin' : '/profile';
+        final dest = next.isStaff ? '/admin' : '/';
         context.go(dest);
       }
     });
@@ -65,12 +65,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
               // Logo
               Text(
-                'StockMaster',
-                textAlign: TextAlign.center,
-                style: tt.displayMedium?.copyWith(
-                  color: AppColors.accent,
-                  fontWeight: FontWeight.bold,
-                ),
+                'Flutter Inventario App',
+                style: tt.displayMedium?.copyWith(color: AppColors.accent),
               ),
               const SizedBox(height: 8),
               Text('Inicia sesión en tu cuenta', style: tt.bodyMedium),
