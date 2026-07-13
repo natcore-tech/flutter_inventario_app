@@ -14,15 +14,16 @@ class AdminNavItem {
 }
 
 const adminNavItems = [
-  AdminNavItem(label: 'Dashboard',  icon: Icons.dashboard_outlined,       route: '/admin'),
-  AdminNavItem(label: 'Categorías', icon: Icons.category_outlined,        route: '/admin/categories'),
-  AdminNavItem(label: 'Productos',  icon: Icons.inventory_2_outlined,     route: '/admin/products'),
-  AdminNavItem(label: 'Pedidos',    icon: Icons.shopping_bag_outlined,    route: '/admin/orders'),
-  AdminNavItem(label: 'Proveedores', icon: Icons.local_shipping_outlined, route: '/admin/proveedores'),
-  AdminNavItem(label: 'Compras',    icon: Icons.shopping_cart_checkout,   route: '/admin/ordenes-compra'),
-  AdminNavItem(label: 'Series',     icon: Icons.qr_code,                  route: '/admin/series'),
-  AdminNavItem(label: 'Movimientos', icon: Icons.swap_horiz,              route: '/admin/movimientos'),
-  AdminNavItem(label: 'Usuarios',   icon: Icons.people_outline,           route: '/admin/users'),
+  AdminNavItem(label: 'Dashboard',    icon: Icons.dashboard_outlined,       route: '/admin'),
+  AdminNavItem(label: 'Categorías',   icon: Icons.category_outlined,        route: '/admin/categories'),
+  AdminNavItem(label: 'Productos',    icon: Icons.inventory_2_outlined,     route: '/admin/products'),
+  AdminNavItem(label: 'Pedidos',      icon: Icons.shopping_bag_outlined,    route: '/admin/orders'),
+  AdminNavItem(label: 'Proveedores',  icon: Icons.local_shipping_outlined,  route: '/admin/proveedores'),
+  AdminNavItem(label: 'Compras',      icon: Icons.shopping_cart_checkout,   route: '/admin/ordenes-compra'),
+  AdminNavItem(label: 'Series',       icon: Icons.qr_code,                  route: '/admin/series'),
+  AdminNavItem(label: 'Movimientos',  icon: Icons.swap_horiz,               route: '/admin/movimientos'),
+  AdminNavItem(label: 'Ajustes',      icon: Icons.tune,                     route: '/admin/ajustes'),
+  AdminNavItem(label: 'Usuarios',     icon: Icons.people_outline,           route: '/admin/users'),
 ];
 
 /// Evita que `/admin/orders` resalte "Dashboard" (`/admin` es prefijo de todas las rutas admin).

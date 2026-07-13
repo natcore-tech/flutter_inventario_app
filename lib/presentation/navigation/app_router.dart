@@ -1,6 +1,7 @@
 // lib/presentation/navigation/app_router.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/ajustes_inventario_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/movimientos_inventario_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/numeros_serie_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/orden_compra_detail_screen.dart';
@@ -188,6 +189,15 @@ final routerProvider = Provider<GoRouter>((ref) {
           title: 'Movimientos',
           currentRoute: s.matchedLocation,
           child: const MovimientosInventarioAdminScreen(),
+        ),
+      ),
+      
+      GoRoute(
+        path: '/admin/ajustes',
+        builder: (_, s) => AdminShell(
+          title: 'Ajustes de Inventario',
+          currentRoute: s.matchedLocation,
+          child: const AjustesInventarioAdminScreen(),
         ),
       ),
     ],

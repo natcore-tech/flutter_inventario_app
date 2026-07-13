@@ -11,7 +11,6 @@ class AjusteInventarioRemoteDataSource {
 
   Future<List<AjusteInventario>> getAjustes() async {
     try {
-      // Apunta a router.register('ajustes-inventario', ...)
       final response = await _dio.get('/ajustes-inventario/');
       final data = response.data as List;
       return data.map((json) => AjusteInventario.fromJson(json)).toList();
