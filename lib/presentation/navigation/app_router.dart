@@ -1,6 +1,8 @@
 // lib/presentation/navigation/app_router.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/orden_compra_detail_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/ordenes_compra_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/proveedores_admin_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -146,6 +148,26 @@ final routerProvider = Provider<GoRouter>((ref) {
           title:        'Proveedores',
           currentRoute: s.matchedLocation,
           child:        const ProveedoresAdminScreen(),
+        ),
+      ),
+
+      GoRoute(
+        path:    '/admin/ordenes-compra',
+        builder: (_, s) => AdminShell(
+          title:        'Compras a Proveedores',
+          currentRoute: s.matchedLocation,
+          child:        const OrdenesCompraAdminScreen(),
+        ),
+      ),
+      
+      GoRoute(
+        path:    '/admin/ordenes-compra/:id',
+        builder: (_, s) => AdminShell(
+          title:        'Detalle Orden #${s.pathParameters['id']}',
+          currentRoute: '/admin/ordenes-compra',
+          child:        OrdenCompraDetailScreen(
+            orderId: int.parse(s.pathParameters['id']!),
+          ),
         ),
       ),
     ],

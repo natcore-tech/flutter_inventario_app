@@ -19,6 +19,7 @@ const adminNavItems = [
   AdminNavItem(label: 'Productos',  icon: Icons.inventory_2_outlined,     route: '/admin/products'),
   AdminNavItem(label: 'Pedidos',    icon: Icons.shopping_bag_outlined,    route: '/admin/orders'),
   AdminNavItem(label: 'Proveedores', icon: Icons.local_shipping_outlined, route: '/admin/proveedores'),
+  AdminNavItem(label: 'Compras',    icon: Icons.shopping_cart_checkout,   route: '/admin/ordenes-compra'),
   AdminNavItem(label: 'Usuarios',   icon: Icons.people_outline,           route: '/admin/users'),
 ];
 
