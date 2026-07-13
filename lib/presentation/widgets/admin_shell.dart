@@ -23,6 +23,7 @@ const adminNavItems = [
   AdminNavItem(label: 'Series',       icon: Icons.qr_code,                  route: '/admin/series'),
   AdminNavItem(label: 'Movimientos',  icon: Icons.swap_horiz,               route: '/admin/movimientos'),
   AdminNavItem(label: 'Ajustes',      icon: Icons.tune,                     route: '/admin/ajustes'),
+  AdminNavItem(label: 'Traslados',    icon: Icons.local_shipping,           route: '/admin/traslados'),
   AdminNavItem(label: 'Usuarios',     icon: Icons.people_outline,           route: '/admin/users'),
 ];
 

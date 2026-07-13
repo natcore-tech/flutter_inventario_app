@@ -2,11 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/ajustes_inventario_admin_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/crear_traslado_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/movimientos_inventario_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/numeros_serie_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/orden_compra_detail_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/ordenes_compra_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/proveedores_admin_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/traslados_bodega_admin_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/model/auth_state.dart';
@@ -199,6 +201,21 @@ final routerProvider = Provider<GoRouter>((ref) {
           currentRoute: s.matchedLocation,
           child: const AjustesInventarioAdminScreen(),
         ),
+      ),
+
+      GoRoute(
+        path: '/admin/traslados',
+        builder: (_, s) => AdminShell(
+          title: 'Traslados de Bodega',
+          currentRoute: s.matchedLocation,
+          child: const TrasladosBodegaAdminScreen(),
+        ),
+      ),
+      
+      GoRoute(
+        path: '/admin/traslados/nuevo',
+        // SIN el AdminShell porque es una pantalla completa que se apila encima
+        builder: (_, __) => const CrearTrasladoScreen(),
       ),
     ],
   );
