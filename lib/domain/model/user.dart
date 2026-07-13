@@ -9,6 +9,7 @@ class User {
   final bool   isStaff;
   final bool   isActive;
   final String dateJoined;
+  final int    numOrders;
 
   const User({
     required this.id,
@@ -19,6 +20,7 @@ class User {
     required this.isStaff,
     required this.isActive,
     required this.dateJoined,
+    required this.numOrders,
   });
 
   factory User.fromJson(Map<String, dynamic> j) => User(
@@ -30,6 +32,7 @@ class User {
     isStaff:    j['is_staff']    as bool,
     isActive:   j['is_active']   as bool,
     dateJoined: j['date_joined'] as String,
+    numOrders:  j['num_orders']  as int,
   );
 
   Map<String, dynamic> toJson() => {
@@ -50,5 +53,6 @@ class User {
     isStaff:    isStaff  ?? this.isStaff,
     isActive:   isActive ?? this.isActive,
     dateJoined: dateJoined,
-    );
+    numOrders:  numOrders,
+  );
 }
