@@ -65,7 +65,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           child: Column(
             children: [
               const SizedBox(height: 60),
-              Text('Flutter Shop App', style: tt.displayMedium?.copyWith(color: AppColors.accent)),
+              Text('Flutter Inventario App', style: tt.displayMedium?.copyWith(color: AppColors.accent)),
               const SizedBox(height: 8),
               Text('Crea tu cuenta gratis', style: tt.bodyMedium),
               const SizedBox(height: 40),

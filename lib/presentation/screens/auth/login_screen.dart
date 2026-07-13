@@ -65,7 +65,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
               // Logo
               Text(
-                'Flutter Shop App',
+                'Flutter Inventario App',
                 style: tt.displayMedium?.copyWith(color: AppColors.accent),
               ),
               const SizedBox(height: 8),

@@ -2,13 +2,20 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/ajustes_inventario_admin_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/clientes_admin_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/cotizacion_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/crear_traslado_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/devolucion_cliente_admin_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/metodo_pago_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/movimientos_inventario_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/numeros_serie_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/orden_compra_detail_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/ordenes_compra_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/proveedores_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/traslados_bodega_admin_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/turno_caja_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/venta_form_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/venta_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/model/auth_state.dart';
@@ -144,6 +151,69 @@ final routerProvider = Provider<GoRouter>((ref) {
           title:        'Usuarios',
           currentRoute: s.matchedLocation,
           child:        const UsersAdminScreen(),
+        ),
+      ),
+
+       GoRoute(
+        path: '/admin/clientes',
+        builder: (_, s) => AdminShell(
+          title: 'Clientes',
+          currentRoute: s.matchedLocation,
+          child: const ClientesAdminScreen(),
+        ),
+      ),
+      
+      GoRoute(
+        path: '/admin/turno-caja',
+        builder: (_, s) => AdminShell(
+          title: 'Turno de Caja',
+          currentRoute: s.matchedLocation,
+          child: const TurnoCajaScreen(),
+        ),
+      ),
+
+      GoRoute(
+        path: '/admin/venta',
+        builder: (_, s) => AdminShell(
+          title: 'Registrar Venta',
+          currentRoute: s.matchedLocation,
+          child: const VentaScreen(),
+        ),
+      ),
+      
+      GoRoute(
+        path: '/admin/ventas',
+        builder: (_, s) => AdminShell(
+          title: 'Historial de Ventas',
+          currentRoute: s.matchedLocation,
+          child: const VentasAdminScreen(),
+        ),
+      ),
+      
+      GoRoute(
+        path: '/admin/metodos-pago',
+        builder: (_, s) => AdminShell(
+          title: 'Métodos de Pago',
+          currentRoute: s.matchedLocation,
+          child: const MetodoPagoAdminScreen(),
+        ),
+      ),
+
+      GoRoute(
+        path:    '/admin/cotizaciones',
+        builder: (_, s) => AdminShell(
+          title:        'Cotizaciones',
+          currentRoute: s.matchedLocation,
+          child:        const CotizacionAdminScreen(),
+        ),
+      ),
+
+      GoRoute(
+        path:    '/admin/devoluciones',
+        builder: (_, s) => AdminShell(
+          title:        'Devoluciones',
+          currentRoute: s.matchedLocation,
+          child:        const DevolucionClienteAdminScreen(),
         ),
       ),
 
