@@ -38,6 +38,7 @@ import '../screens/admin/order_admin_detail_screen.dart';
 import '../screens/admin/orders_admin_screen.dart';
 import '../screens/admin/products_admin_screen.dart';
 import '../screens/admin/users_admin_screen.dart';
+import '../screens/admin/marcas_admin_screen.dart';
 import '../widgets/admin_shell.dart';
 import 'public_shell.dart';
 
@@ -286,6 +287,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/admin/traslados/nuevo',
         // SIN el AdminShell porque es una pantalla completa que se apila encima
         builder: (_, __) => const CrearTrasladoScreen(),
+      ),
+
+      GoRoute(
+        path: '/admin/marcas',
+        builder: (_, s) => AdminShell(
+          title: 'Marcas',
+          currentRoute: s.matchedLocation,
+          child: const MarcasAdminScreen(),
+        ),
       ),
     ],
   );
