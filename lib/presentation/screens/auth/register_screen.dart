@@ -18,12 +18,12 @@ class RegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
-  final _formKey     = GlobalKey<FormState>();
-  final _userCtrl    = TextEditingController();
-  final _emailCtrl   = TextEditingController();
-  final _passCtrl    = TextEditingController();
-  final _pass2Ctrl   = TextEditingController();
-  bool  _submitted   = false;
+  final _formKey = GlobalKey<FormState>();
+  final _userCtrl = TextEditingController();
+  final _emailCtrl = TextEditingController();
+  final _passCtrl = TextEditingController();
+  final _pass2Ctrl = TextEditingController();
+  bool _submitted = false;
 
   @override
   void dispose() {
@@ -38,19 +38,19 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     setState(() => _submitted = true);
     if (!_formKey.currentState!.validate()) return;
     await ref.read(authProvider.notifier).register(
-      _userCtrl.text,
-      _emailCtrl.text,
-      _passCtrl.text,
-      _pass2Ctrl.text,
-    );
+          _userCtrl.text,
+          _emailCtrl.text,
+          _passCtrl.text,
+          _pass2Ctrl.text,
+        );
   }
 
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final isLoading = authState.isChecking;
-    final error     = authState.error;
-    final tt        = Theme.of(context).textTheme;
+    final error = authState.error;
+    final tt = Theme.of(context).textTheme;
 
     ref.listen<AuthState>(authProvider, (_, next) {
       if (next.isAuthenticated) {
@@ -65,34 +65,50 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           child: Column(
             children: [
               const SizedBox(height: 60),
-              Text('Flutter Shop App', style: tt.displayMedium?.copyWith(color: AppColors.accent)),
+              Center(
+                child: Text(
+                  'Stock Master',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                    color: AppColors.accent,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -1.0,
+                    shadows: [
+                      Shadow(
+                        color: AppColors.accent.withOpacity(0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               const SizedBox(height: 8),
               Text('Crea tu cuenta gratis', style: tt.bodyMedium),
               const SizedBox(height: 40),
-
               Container(
-                padding:    const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color:        AppColors.surface,
+                  color: AppColors.surface,
                   borderRadius: BorderRadius.circular(20),
-                  border:       Border.all(color: AppColors.border),
+                  border: Border.all(color: AppColors.border),
                 ),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     children: [
-
                       if (error != null) ...[
                         Container(
-                          width:   double.infinity,
+                          width: double.infinity,
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color:        AppColors.error.withValues(alpha: 0.1),
+                            color: AppColors.error.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
                             error,
-                            style: const TextStyle(color: AppColors.error, fontSize: 13),
+                            style: const TextStyle(
+                                color: AppColors.error, fontSize: 13),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -100,59 +116,64 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                       // Usuario
                       AuthTextField(
-                        label:      'Usuario',
-                        hint:       'mínimo 3 caracteres',
+                        label: 'Usuario',
+                        hint: 'mínimo 3 caracteres',
                         controller: _userCtrl,
-                        enabled:    !isLoading,
-                        validator:  _submitted ? validateUsername : null,
-                        onChanged:  (_) => ref.read(authProvider.notifier).clearError(),
+                        enabled: !isLoading,
+                        validator: _submitted ? validateUsername : null,
+                        onChanged: (_) =>
+                            ref.read(authProvider.notifier).clearError(),
                       ),
                       const SizedBox(height: 14),
 
                       // Email
                       AuthTextField(
-                        label:       'Email',
-                        hint:        'tu@email.com',
-                        controller:  _emailCtrl,
-                        enabled:     !isLoading,
-                        keyboardType:TextInputType.emailAddress,
-                        validator:   _submitted ? validateEmail : null,
-                        onChanged:   (_) => ref.read(authProvider.notifier).clearError(),
+                        label: 'Email',
+                        hint: 'tu@email.com',
+                        controller: _emailCtrl,
+                        enabled: !isLoading,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: _submitted ? validateEmail : null,
+                        onChanged: (_) =>
+                            ref.read(authProvider.notifier).clearError(),
                       ),
                       const SizedBox(height: 14),
 
                       // Contraseña
                       AuthTextField(
-                        label:      'Contraseña',
-                        hint:       'mínimo 8 caracteres',
+                        label: 'Contraseña',
+                        hint: 'mínimo 8 caracteres',
                         controller: _passCtrl,
                         isPassword: true,
-                        enabled:    !isLoading,
-                        validator:  _submitted ? validatePassword : null,
-                        onChanged:  (_) => ref.read(authProvider.notifier).clearError(),
+                        enabled: !isLoading,
+                        validator: _submitted ? validatePassword : null,
+                        onChanged: (_) =>
+                            ref.read(authProvider.notifier).clearError(),
                       ),
                       const SizedBox(height: 14),
 
                       // Confirmar contraseña
                       AuthTextField(
-                        label:           'Confirmar contraseña',
-                        hint:            'repite la contraseña',
-                        controller:      _pass2Ctrl,
-                        isPassword:      true,
-                        enabled:         !isLoading,
+                        label: 'Confirmar contraseña',
+                        hint: 'repite la contraseña',
+                        controller: _pass2Ctrl,
+                        isPassword: true,
+                        enabled: !isLoading,
                         textInputAction: TextInputAction.done,
-                        validator:       _submitted
+                        validator: _submitted
                             ? (v) {
-                                if (v != _passCtrl.text) return 'Las contraseñas no coinciden';
+                                if (v != _passCtrl.text)
+                                  return 'Las contraseñas no coinciden';
                                 return null;
                               }
                             : null,
-                        onChanged: (_) => ref.read(authProvider.notifier).clearError(),
+                        onChanged: (_) =>
+                            ref.read(authProvider.notifier).clearError(),
                       ),
                       const SizedBox(height: 24),
 
                       AuthButton(
-                        label:     'Crear mi cuenta',
+                        label: 'Crear mi cuenta',
                         onPressed: _submit,
                         isLoading: isLoading,
                       ),
@@ -160,7 +181,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
