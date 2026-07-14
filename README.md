@@ -2,14 +2,14 @@
 
 Aplicación móvil de gestión de inventario desarrollada en Flutter, con backend en Django REST Framework. Incluye panel de administración (catálogo, inventario, compras, ventas, clientes) y zona pública para el usuario final.
 
-## Requisitos
+## 📋 Requisitos
 
-- **Flutter SDK** 3.x o superior 
+* **Flutter SDK** 3.x o superior 
 # macOS con Homebrew
 brew install flutter
 
 # Windows — descargar el SDK desde flutter.dev/install
- Luego añadir al PATH:
+Luego añadir al PATH:
 C:\flutter\bin
 
 # Linux
@@ -17,24 +17,20 @@ sudo snap install flutter --classic
 
 # Verificar instalación
 flutter doctor
-- Un editor compatible: VS Code, Android Studio, o similar
-- Un emulador Android/iOS configurado, o un dispositivo físico con depuración USB habilitada
-- Conexión a internet (la app consume una API remota, no funciona 100% offline)
+* Un editor compatible: VS Code, Android Studio, o similar
+* Un emulador Android/iOS configurado, o un dispositivo físico con depuración USB habilitada
+* Conexión a internet (la app consume una API remota, no funciona 100% offline)
 
-Verifica tu instalación con:
 
-```bash
-flutter doctor
-```
+Resuelve cualquier error que te marque antes de continuar.
 
-Resuelve cualquier ❌ que te marque antes de continuar.
-
-## 🚀 Instalación
+## Instalación
 
 1. Clona el repositorio:
    ```bash
-   git clone <url-del-repositorio>
+   git clone https://github.com/natcore-tech/flutter_inventario_app.git
    cd flutter_inventario_app
+   code .
    ```
 
 2. Instala las dependencias:
@@ -47,69 +43,35 @@ Resuelve cualquier ❌ que te marque antes de continuar.
    flutter devices
    ```
 
-## ▶️ Comandos principales
+## Comandos principales
 
-| Comando | Qué hace |
+| Comando | 
 |---|---|
 | `flutter pub get` | Instala/actualiza las dependencias del proyecto |
 | `flutter run` | Ejecuta la app en modo debug en el dispositivo/emulador conectado |
-| `flutter run --release` | Ejecuta la app en modo release (más rápido, sin hot reload) |
-| `flutter build apk` | Genera un APK de Android para distribución |
-| `flutter build ios` | Genera el build de iOS (requiere macOS + Xcode) |
-| `flutter analyze` | Revisa el código en busca de errores y warnings |
-| `flutter clean` | Limpia archivos de build (útil si algo no compila tras cambios grandes) |
+| `shift + r` | Actualiza la app |
 
-## ⚙️ Configuración de la API
 
-La app consume una API REST (Django REST Framework) ya desplegada. La URL base está definida como constante en:
+## Configuración de la API
 
-```
-lib/data/remote/api/dio_client.dart
-```
+La app consume una API REST (Django REST Framework) ya desplegada. La URL base está en el documento de evidencias:
 
-Actualmente apunta a:
 
-```
-https://stock-master.nael.live/api
-```
+> **Nota:** el proyecto no usa `.env` ni `--dart-define` actualmente — la URL está fija en el documento.
+## Credenciales de prueba
 
-Si necesitas apuntar a otro backend (por ejemplo, uno corriendo en local durante desarrollo), edita esa constante directamente en el archivo. Ejemplo:
+Para iniciar sesión y probar la app con un usuario de tipo Staff/Admin esta en el documento de evidencias:
 
-```dart
-// lib/data/remote/api/dio_client.dart
-final dioProvider = Provider<Dio>((ref) {
-  final dio = Dio(BaseOptions(
-    baseUrl: 'https://stock-master.nael.live/api', // 👈 cambia aquí si es necesario
-    // ...
-  ));
-  return dio;
-});
-```
 
-> **Nota:** el proyecto no usa `.env` ni `--dart-define` actualmente — la URL está fija en el código. Si trabajas en equipo con distintos entornos (local/staging/producción), considera migrar esto a variables de entorno más adelante.
+## Cómo se conecta la app a la API
 
-## 🔑 Credenciales de prueba
+* La app usa el paquete **Dio** como cliente HTTP, configurado en `lib/data/remote/api/dio_client.dart`.
+* La autenticación es mediante **JWT** (`djangorestframework-simplejwt`): al iniciar sesión (`/auth/login/`), el backend devuelve un token que Dio adjunta automáticamente en las peticiones siguientes.
+* Cada módulo (Clientes, Turno de Caja, Ventas, Cotizaciones, Métodos de Pago, Devoluciones, etc.) tiene su propio **datasource** en `lib/data/remote/api/`, que llama a los endpoints correspondientes bajo `/api/...`.
+* Puedes explorar la documentación interactiva de la API (Swagger) en la url de la api:
 
-Para iniciar sesión y probar la app con un usuario de tipo Staff/Admin:
 
-```
-Usuario:     admin
-Contraseña:  admin123
-```
-
-> Estas son credenciales de **prueba/desarrollo**. No uses estas credenciales en un entorno de producción real.
-
-## 🔌 Cómo se conecta la app a la API
-
-- La app usa el paquete **Dio** como cliente HTTP, configurado en `lib/data/remote/api/dio_client.dart`.
-- La autenticación es mediante **JWT** (`djangorestframework-simplejwt`): al iniciar sesión (`/auth/login/`), el backend devuelve un token que Dio adjunta automáticamente en las peticiones siguientes.
-- Cada módulo (Clientes, Turno de Caja, Ventas, Cotizaciones, Métodos de Pago, Devoluciones, etc.) tiene su propio **datasource** en `lib/data/remote/api/`, que llama a los endpoints correspondientes bajo `/api/...`.
-- Puedes explorar la documentación interactiva de la API (Swagger) en:
-  ```
-  https://stock-master.nael.live/api/docs/
-  ```
-
-## 📁 Estructura del proyecto (resumen)
+## Estructura del proyecto (resumen)
 
 ```
 lib/
@@ -124,8 +86,8 @@ lib/
 └── theme/                  # Colores y tema visual de la app
 ```
 
-## 🐛 Problemas comunes
+## Problemas comunes
 
-- **Error de login / "Bad Request" / timeouts**: el backend puede estar temporalmente caído. Verifica con `https://stock-master.nael.live/api/health/` en el navegador.
-- **`flutter pub get` falla**: asegúrate de tener la versión de Flutter/Dart compatible con las dependencias del `pubspec.yaml`.
-- **Cambios no se reflejan**: corre `flutter clean && flutter pub get` y vuelve a intentar.
+* **Error de login / "Bad Request" / timeouts**: el backend puede estar temporalmente caído. Verifica con `https://stock-master.nael.live/api/health/` en el navegador.
+* **`flutter pub get` falla**: asegúrate de tener la versión de Flutter/Dart compatible con las dependencias del `pubspec.yaml`.
+* **Cambios no se reflejan**: corre `flutter clean && flutter pub get` y vuelve a intentar.
