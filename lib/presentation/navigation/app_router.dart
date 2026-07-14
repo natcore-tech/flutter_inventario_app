@@ -12,6 +12,7 @@ import 'package:flutter_inventario_app/presentation/screens/admin/movimientos_in
 import 'package:flutter_inventario_app/presentation/screens/admin/numeros_serie_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/orden_compra_detail_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/ordenes_compra_admin_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/productos_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/proveedores_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/traslados_bodega_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/turno_caja_screen.dart';
@@ -315,6 +316,15 @@ final routerProvider = Provider<GoRouter>((ref) {
           title: 'Unidades de Medida',
           currentRoute: s.matchedLocation,
           child: const UnidadesMedidaAdminScreen(),
+        ),
+      ),
+      
+      GoRoute(
+        path: '/admin/productos',
+        builder: (_, s) => AdminShell(
+          title: 'Productos',
+          currentRoute: s.matchedLocation,
+          child: const ProductosAdminScreen(),
         ),
       ),
     ],
