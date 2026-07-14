@@ -77,25 +77,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/register', builder: (_, __) => const RegisterScreen()),
       GoRoute(path: '/forgot-password',        builder: (_, __) => const ForgotPasswordScreen()),
       GoRoute(path: '/reset-password-confirm', builder: (_, __) => const ResetPasswordConfirmScreen()),
-      GoRoute(
-        path: 'bodegas',
-        builder: (context, state) => const BodegasAdminScreen(),
-      ),
-      GoRoute(
-        path: 'ubicaciones',
-        builder: (context, state) => const UbicacionesAdminScreen(),
-      ),
-      GoRoute(
-        path: 'stock',
-        builder: (context, state) => const StockBodegasAdminScreen(),
-      ),
-      GoRoute(
-        path: 'alertas',
-        builder: (context, state) => const AlertasStockAdminScreen(),
-      ),
-
-      // ── Staff ─────────────────────────────────────────────
-      GoRoute(path: '/send-notification', builder: (_, __) => const SendNotificationScreen()),
+      
 
       // ── Zona pública con BottomNavBar ──────────────────────
       ShellRoute(
