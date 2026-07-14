@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/ajustes_inventario_admin_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/categorias_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/clientes_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/cotizacion_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/crear_traslado_screen.dart';
@@ -295,6 +296,15 @@ final routerProvider = Provider<GoRouter>((ref) {
           title: 'Marcas',
           currentRoute: s.matchedLocation,
           child: const MarcasAdminScreen(),
+        ),
+      ),
+
+      GoRoute(
+        path: '/admin/categorias',
+        builder: (_, s) => AdminShell(
+          title: 'Categorías',
+          currentRoute: s.matchedLocation,
+          child: const CategoriasAdminScreen(),
         ),
       ),
     ],
