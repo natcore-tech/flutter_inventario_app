@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/ajustes_inventario_admin_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/categorias_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/clientes_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/cotizacion_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/crear_traslado_screen.dart';
@@ -11,9 +12,11 @@ import 'package:flutter_inventario_app/presentation/screens/admin/movimientos_in
 import 'package:flutter_inventario_app/presentation/screens/admin/numeros_serie_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/orden_compra_detail_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/ordenes_compra_admin_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/productos_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/proveedores_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/traslados_bodega_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/turno_caja_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/unidades_medida_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/venta_form_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/venta_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,6 +41,7 @@ import '../screens/admin/order_admin_detail_screen.dart';
 import '../screens/admin/orders_admin_screen.dart';
 import '../screens/admin/products_admin_screen.dart';
 import '../screens/admin/users_admin_screen.dart';
+import '../screens/admin/marcas_admin_screen.dart';
 import '../widgets/admin_shell.dart';
 import 'public_shell.dart';
 
@@ -286,6 +290,42 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/admin/traslados/nuevo',
         // SIN el AdminShell porque es una pantalla completa que se apila encima
         builder: (_, __) => const CrearTrasladoScreen(),
+      ),
+
+      GoRoute(
+        path: '/admin/marcas',
+        builder: (_, s) => AdminShell(
+          title: 'Marcas',
+          currentRoute: s.matchedLocation,
+          child: const MarcasAdminScreen(),
+        ),
+      ),
+
+      GoRoute(
+        path: '/admin/categorias',
+        builder: (_, s) => AdminShell(
+          title: 'Categorías',
+          currentRoute: s.matchedLocation,
+          child: const CategoriasAdminScreen(),
+        ),
+      ),
+
+      GoRoute(
+        path: '/admin/unidades',
+        builder: (_, s) => AdminShell(
+          title: 'Unidades de Medida',
+          currentRoute: s.matchedLocation,
+          child: const UnidadesMedidaAdminScreen(),
+        ),
+      ),
+      
+      GoRoute(
+        path: '/admin/productos',
+        builder: (_, s) => AdminShell(
+          title: 'Productos',
+          currentRoute: s.matchedLocation,
+          child: const ProductosAdminScreen(),
+        ),
       ),
     ],
   );

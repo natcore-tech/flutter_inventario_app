@@ -14,10 +14,6 @@ class AdminNavItem {
 }
 
 const adminNavItems = [
-  AdminNavItem(label: 'Dashboard',    icon: Icons.dashboard_outlined,       route: '/admin'),
-  AdminNavItem(label: 'Categorías',   icon: Icons.category_outlined,        route: '/admin/categories'),
-  AdminNavItem(label: 'Productos',    icon: Icons.inventory_2_outlined,     route: '/admin/products'),
-  AdminNavItem(label: 'Pedidos',      icon: Icons.shopping_bag_outlined,    route: '/admin/orders'),
   AdminNavItem(label: 'Clientes',        icon: Icons.people_alt_outlined,            route: '/admin/clientes'),
   AdminNavItem(label: 'Turno de Caja',   icon: Icons.point_of_sale_rounded,          route: '/admin/turno-caja'),
   AdminNavItem(label: 'Registrar Venta', icon: Icons.shopping_cart_checkout_rounded, route: '/admin/venta'),
@@ -31,7 +27,11 @@ const adminNavItems = [
   AdminNavItem(label: 'Movimientos',  icon: Icons.swap_horiz,               route: '/admin/movimientos'),
   AdminNavItem(label: 'Ajustes',      icon: Icons.tune,                     route: '/admin/ajustes'),
   AdminNavItem(label: 'Traslados',    icon: Icons.local_shipping,           route: '/admin/traslados'),
-  AdminNavItem(label: 'Usuarios',     icon: Icons.people_outline,           route: '/admin/users'),
+  AdminNavItem(label: 'Marcas',         icon: Icons.branding_watermark, route: '/admin/marcas'),
+  AdminNavItem(label: 'Categorías',     icon: Icons.category_outlined, route: '/admin/categorias'),
+  AdminNavItem(label: 'Unidades', icon: Icons.square_foot, route: '/admin/unidades'),
+  AdminNavItem(label: 'Productos', icon: Icons.inventory_2, route: '/admin/productos'),
+  AdminNavItem(label: 'Usuarios',       icon: Icons.people_outline,           route: '/admin/users'),
 ];
 
 /// Evita que `/admin/orders` resalte "Dashboard" (`/admin` es prefijo de todas las rutas admin).
