@@ -69,4 +69,23 @@ class ProductoRemoteDataSource {
       throw ApiException.fromDioError(e);
     }
   }
+
+  // Método para el catálogo público
+  Future<List<Producto>> getProductosDisponibles() async {
+    try {
+      final response = await _dio.get('/productos/disponibles/');
+      
+      List<dynamic> data;
+      if (response.data is Map<String, dynamic> && response.data.containsKey('results')) {
+        data = response.data['results'];
+      } else {
+        data = response.data as List;
+      }
+
+      return data.map((json) => Producto.fromJson(json)).toList();
+    } on DioException catch (e) {
+      throw ApiException.fromDioError(e);
+    }
+  }
+  
 }
