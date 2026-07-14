@@ -33,6 +33,7 @@ const adminNavItems = [
   AdminNavItem(label: 'Traslados',    icon: Icons.local_shipping,           route: '/admin/traslados'),
   AdminNavItem(label: 'Marcas',         icon: Icons.branding_watermark, route: '/admin/marcas'),
   AdminNavItem(label: 'Categorías',     icon: Icons.category_outlined, route: '/admin/categorias'),
+  AdminNavItem(label: 'Unidades', icon: Icons.square_foot, route: '/admin/unidades'),
   AdminNavItem(label: 'Usuarios',       icon: Icons.people_outline,           route: '/admin/users'),
 ];
 

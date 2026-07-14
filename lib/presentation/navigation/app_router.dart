@@ -15,6 +15,7 @@ import 'package:flutter_inventario_app/presentation/screens/admin/ordenes_compra
 import 'package:flutter_inventario_app/presentation/screens/admin/proveedores_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/traslados_bodega_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/turno_caja_screen.dart';
+import 'package:flutter_inventario_app/presentation/screens/admin/unidades_medida_admin_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/venta_form_screen.dart';
 import 'package:flutter_inventario_app/presentation/screens/admin/venta_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -305,6 +306,15 @@ final routerProvider = Provider<GoRouter>((ref) {
           title: 'Categorías',
           currentRoute: s.matchedLocation,
           child: const CategoriasAdminScreen(),
+        ),
+      ),
+
+      GoRoute(
+        path: '/admin/unidades',
+        builder: (_, s) => AdminShell(
+          title: 'Unidades de Medida',
+          currentRoute: s.matchedLocation,
+          child: const UnidadesMedidaAdminScreen(),
         ),
       ),
     ],
