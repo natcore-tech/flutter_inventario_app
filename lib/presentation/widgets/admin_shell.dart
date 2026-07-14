@@ -31,6 +31,10 @@ const adminNavItems = [
   AdminNavItem(label: 'Categorías',     icon: Icons.category_outlined, route: '/admin/categorias'),
   AdminNavItem(label: 'Unidades', icon: Icons.square_foot, route: '/admin/unidades'),
   AdminNavItem(label: 'Productos', icon: Icons.inventory_2, route: '/admin/productos'),
+  AdminNavItem(label: 'Bodegas',    icon: Icons.warehouse_outlined,       route: '/admin/bodegas'),
+  AdminNavItem(label: 'Ubicaciones',icon: Icons.place_outlined,           route: '/admin/ubicaciones'),
+  AdminNavItem(label: 'Stock',      icon: Icons.inventory_outlined,       route: '/admin/stock'),
+  AdminNavItem(label: 'Alertas',    icon: Icons.warning_amber_outlined,   route: '/admin/alertas'),
   AdminNavItem(label: 'Usuarios',       icon: Icons.people_outline,           route: '/admin/users'),
 ];
 
