@@ -83,7 +83,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ShellRoute(
         builder: (_, __, child) => PublicShell(child: child),
         routes: [
-          GoRoute(path: '/',       builder: (_, __) => const HomeScreen()),
+          GoRoute(path: '/',       builder: (_, __) => const CatalogScreen()),
           GoRoute(
             path: '/catalog',
             builder: (_, __) => const CatalogScreen(),
@@ -112,9 +112,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path:    '/admin',
         builder: (_, s) => AdminShell(
-          title:        'Dashboard',
+          title:        'Productos',
           currentRoute: s.matchedLocation,
-          child:        const DashboardScreen(),
+          child:        const ProductosAdminScreen(),
         ),
       ),
       GoRoute(
